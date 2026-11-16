@@ -24,6 +24,11 @@ class User(Base):
     product_pitch = Column(Text, default="An automated AI tool that solves everyday bottlenecks.")
     target_audience = Column(String(255), default="Founders, Freelancers & Small Businesses")
     
+    # Identifiants Reddit & X pour connexion de l'algorithme d'exploration
+    reddit_username = Column(String(255), nullable=True, default="")
+    reddit_password = Column(String(255), nullable=True, default="")
+    twitter_handle = Column(String(255), nullable=True, default="")
+    
     # Plans: 'FREE' (limit 5 leads), 'STARTER' ($29/mo), 'GROWTH' ($69/mo)
     plan = Column(String(50), default="FREE")
     is_active = Column(Boolean, default=True)

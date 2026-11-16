@@ -234,6 +234,8 @@ def register_submit(
     product_name: str = Form(...),
     product_url: str = Form(...),
     product_pitch: str = Form(...),
+    reddit_username: Optional[str] = Form(""),
+    reddit_password: Optional[str] = Form(""),
     db: Session = Depends(get_db)
 ):
     clean_email = email.strip().lower()
@@ -258,6 +260,8 @@ def register_submit(
         product_name=product_name.strip(),
         product_url=product_url.strip(),
         product_pitch=product_pitch.strip(),
+        reddit_username=reddit_username.strip().replace("u/", "") if reddit_username else "",
+        reddit_password=reddit_password.strip() if reddit_password else "",
         plan="FREE"
     )
     db.add(user)

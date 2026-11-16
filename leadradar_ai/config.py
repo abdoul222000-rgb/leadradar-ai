@@ -5,11 +5,15 @@ class Settings(BaseSettings):
     LEADRADAR_APP_NAME: str = "LeadRadar AI"
     APP_SLOGAN: str = "The #1 Zero-Ad Reddit & X Lead Engine for Founders"
     SECRET_KEY: str = "leadradar-super-secret-key-2026-high-conversion-suite"
-    DATABASE_URL: str = "sqlite:///./leadradar.db"
+    LEADRADAR_DATABASE_URL: str = "sqlite:///./leadradar.db"
 
     @property
     def APP_NAME(self) -> str:
         return self.LEADRADAR_APP_NAME
+
+    @property
+    def DATABASE_URL(self) -> str:
+        return os.getenv("LEADRADAR_DATABASE_URL", "sqlite:///./leadradar.db")
     
     # Port d'écoute
     PORT: int = int(os.getenv("PORT", 8070))

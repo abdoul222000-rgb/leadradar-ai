@@ -49,6 +49,20 @@
                 <a href="{{ user.product_url }}" target="_blank" class="text-[11px] text-emerald-400 hover:underline truncate block mt-0.5">
                     {{ user.product_url }}
                 </a>
+
+                <!-- Statut Connexion Compte Reddit -->
+                <div class="mt-2.5 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px]">
+                    <span class="text-slate-400 flex items-center gap-1">
+                        <i class="fa-brands fa-reddit text-orange-400"></i> Compte Reddit
+                    </span>
+                    {% if user.reddit_username %}
+                    <span class="text-emerald-400 font-bold flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> u/{{ user.reddit_username }}
+                    </span>
+                    {% else %}
+                    <span class="text-slate-500 font-medium">Auto-connecté</span>
+                    {% endif %}
+                </div>
             </div>
 
             <!-- Nav Links -->
