@@ -1,0 +1,185 @@
+{% extends "dashboard/layout.html" %}
+
+{% block title %}Billing & Grey Payouts — LeadRadar AI{% endblock %}
+
+{% block dashboard_content %}
+<div class="space-y-6 max-w-5xl">
+    <!-- Header -->
+    <div class="glass-card rounded-2xl p-6 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-slate-800">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-black text-white mb-1">Billing & Payout Infrastructure</h1>
+                <p class="text-xs text-slate-400">
+                    Automated subscription processing via Lemon Squeezy Merchant of Record with direct ACH clearing to Lead Bank (Grey USD).
+                </p>
+            </div>
+            <div>
+                <span class="px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider {{ 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' if user.plan != 'FREE' else 'bg-amber-500/15 text-amber-300 border border-amber-500/30' }}">
+                    Current Plan : {{ user.plan }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bank Payout Clearance Status (Grey.co USD) -->
+    <div class="glass-card rounded-2xl p-6 border-2 border-emerald-500/40 relative overflow-hidden bg-gradient-to-r from-emerald-950/20 via-slate-900 to-slate-950 glow-emerald">
+        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400 mb-4">
+            <i class="fa-solid fa-building-columns text-emerald-400"></i>
+            <span>Verified Payout Account Destination (Grey.co USD)</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+            <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800">
+                <span class="text-slate-400 text-[10px] uppercase font-bold">Banking Institution</span>
+                <div class="text-sm font-bold text-white mt-1">{{ lead_bank_name }}</div>
+                <div class="text-[10px] text-emerald-400 font-semibold mt-0.5">United States (USD ACH)</div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800">
+                <span class="text-slate-400 text-[10px] uppercase font-bold">Account Holder</span>
+                <div class="text-sm font-bold text-white mt-1">{{ lead_bank_beneficiary }}</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Authorized Founder</div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800">
+                <span class="text-slate-400 text-[10px] uppercase font-bold">Account Number</span>
+                <div class="text-sm font-mono font-bold text-white mt-1">•••• •••• {{ lead_bank_last4 }}</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Checking Account</div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800">
+                <span class="text-slate-400 text-[10px] uppercase font-bold">Routing Number (ABA)</span>
+                <div class="text-sm font-mono font-bold text-white mt-1">{{ lead_bank_routing }}</div>
+                <div class="text-[10px] text-emerald-400 font-semibold mt-0.5">Direct ACH Clearing</div>
+            </div>
+        </div>
+
+        <!-- Payout Flow Explainer -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-[11px] text-slate-400">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                <span><strong>Payout Frequency :</strong> Bi-weekly / Weekly transfers from Lemon Squeezy straight to your Grey USD balance.</span>
+            </div>
+            <span class="text-slate-400 font-medium">Standard 14-21 day rolling buffer applied to initial transactions</span>
+        </div>
+    </div>
+
+    <!-- Pricing Upgrade Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Starter Plan -->
+        <div class="glass-card rounded-2xl p-6 border border-slate-700/80 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs uppercase font-extrabold px-3 py-1 rounded-full bg-slate-800 text-slate-300">Starter Plan</span>
+                    {% if user.plan == 'STARTER' %}
+                    <span class="text-xs font-bold text-emerald-400 flex items-center gap-1"><i class="fa-solid fa-check"></i> Active</span>
+                    {% endif %}
+                </div>
+                <div class="flex items-baseline gap-2 mb-4">
+                    <span class="text-4xl font-black text-white">$29</span>
+                    <span class="text-slate-400 text-xs font-semibold">/ month</span>
+                </div>
+                <ul class="space-y-2.5 text-xs text-slate-300 mb-6">
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400 text-[10px]"></i> 5 Monitored Keywords & Subreddits</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400 text-[10px]"></i> 50 AI Stealth Replies / month</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400 text-[10px]"></i> Tracked Redirect Links</li>
+                </ul>
+            </div>
+
+            <div class="space-y-2">
+                <a href="{{ starter_checkout_url }}" target="_blank" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs text-center transition-colors block">
+                    <i class="fa-solid fa-credit-card mr-1"></i> Subscribe via Lemon Squeezy
+                </a>
+                <form method="POST" action="/dashboard/billing/test-upgrade?plan=STARTER">
+                    <button type="submit" class="w-full py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-white text-[11px] font-semibold transition-colors">
+                        Simulate Instant $29 Upgrade (Test Mode)
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Growth Plan -->
+        <div class="glass-card rounded-2xl p-6 border-2 border-emerald-500/50 bg-gradient-to-b from-slate-900 to-slate-950 flex flex-col justify-between glow-emerald">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs uppercase font-extrabold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300">Growth Pro</span>
+                    {% if user.plan == 'GROWTH' %}
+                    <span class="text-xs font-bold text-emerald-400 flex items-center gap-1"><i class="fa-solid fa-check"></i> Active</span>
+                    {% endif %}
+                </div>
+                <div class="flex items-baseline gap-2 mb-4">
+                    <span class="text-4xl font-black text-white">$69</span>
+                    <span class="text-slate-400 text-xs font-semibold">/ month</span>
+                </div>
+                <ul class="space-y-2.5 text-xs text-slate-200 mb-6">
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400 text-[10px]"></i> <strong>Unlimited</strong> Monitored Keywords</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400 text-[10px]"></i> <strong>Unlimited</strong> AI Stealth Replies</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400 text-[10px]"></i> Instant Real-Time Email/Telegram Alerts</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400 text-[10px]"></i> Multiple SaaS Products Supported</li>
+                </ul>
+            </div>
+
+            <div class="space-y-2">
+                <a href="{{ growth_checkout_url }}" target="_blank" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs text-center transition-all shadow-md shadow-emerald-500/20 block">
+                    <i class="fa-solid fa-credit-card mr-1"></i> Subscribe via Lemon Squeezy
+                </a>
+                <form method="POST" action="/dashboard/billing/test-upgrade?plan=GROWTH">
+                    <button type="submit" class="w-full py-2 rounded-lg bg-emerald-950/40 hover:bg-emerald-950/70 border border-emerald-500/30 text-emerald-400 hover:text-emerald-300 text-[11px] font-semibold transition-colors">
+                        Simulate Instant $69 Upgrade (Test Mode)
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Webhook Integration Technical Guide -->
+    <div class="glass-card rounded-2xl p-6 border border-slate-800">
+        <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-plug text-cyan-400"></i> Your Lemon Squeezy Webhook Endpoint
+        </h3>
+        <p class="text-xs text-slate-400 mb-4">
+            Copy this endpoint and paste it into your <strong>Lemon Squeezy Dashboard $\to$ Settings $\to$ Webhooks</strong>:
+        </p>
+
+        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-4 font-mono text-xs text-emerald-400">
+            <span class="truncate">{{ base_url }}/api/webhook/lemonsqueezy</span>
+            <button onclick="navigator.clipboard.writeText('{{ base_url }}/api/webhook/lemonsqueezy'); showToast('Webhook URL copied!', 'success');" 
+                    class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-sans font-bold text-[11px] shrink-0">
+                <i class="fa-regular fa-copy"></i> Copy
+            </button>
+        </div>
+
+        <div class="mt-4 text-[11px] text-slate-500">
+            Secret Key: <code class="text-slate-400">{{ webhook_secret }}</code> • Supported events: <code class="text-slate-400">order_created, subscription_created, subscription_payment_success, subscription_cancelled</code>
+        </div>
+    </div>
+
+    <!-- Billing Transactions Log -->
+    <div class="glass-card rounded-2xl p-6">
+        <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-receipt text-emerald-400"></i> Recent Payment & Clearance Transactions
+        </h3>
+
+        {% if not billing_logs %}
+        <div class="p-6 text-center text-slate-400 text-xs">
+            No transactions recorded yet. Use the Test Mode button above to test the clearance flow!
+        </div>
+        {% else %}
+        <div class="divide-y divide-slate-800 text-xs">
+            {% for log in billing_logs %}
+            <div class="py-3 flex items-center justify-between gap-4">
+                <div>
+                    <div class="font-bold text-white">{{ log.event_name }}</div>
+                    <div class="text-[10px] text-slate-400">{{ log.created_at.strftime('%Y-%m-%d %H:%M') }} • Order #{{ log.lemon_order_id }}</div>
+                </div>
+                <div class="text-right">
+                    <div class="font-bold text-emerald-400">+${{ "%.2f"|format(log.amount_usd) }} USD</div>
+                    <div class="text-[10px] text-slate-400">Target: {{ log.payout_bank }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

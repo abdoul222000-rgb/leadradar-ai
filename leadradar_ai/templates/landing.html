@@ -1,0 +1,397 @@
+{% extends "base.html" %}
+
+{% block title %}LeadRadar AI — Zero-Ad Reddit & X Lead Engine for Founders{% endblock %}
+
+{% block content %}
+<!-- Navbar -->
+<header class="sticky top-0 z-40 bg-[#080c14]/80 backdrop-blur-xl border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-400 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-emerald-500/20">
+                <i class="fa-solid fa-radar"></i>
+            </div>
+            <div>
+                <span class="text-xl font-extrabold tracking-tight text-white">Lead<span class="text-emerald-400">Radar</span><span class="text-xs ml-1 px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">AI</span></span>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">Zero-Ad Lead Engine</p>
+            </div>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+            <a href="#demo" class="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Live Demo
+            </a>
+            <a href="#how-it-works" class="hover:text-emerald-400 transition-colors">How It Works</a>
+            <a href="#comparison" class="hover:text-emerald-400 transition-colors">Why It Beats Ads</a>
+            <a href="#pricing" class="hover:text-emerald-400 transition-colors">Pricing</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+            {% if current_user %}
+            <a href="/dashboard" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-emerald-500/25 flex items-center gap-2">
+                <i class="fa-solid fa-gauge"></i> Open Dashboard
+            </a>
+            {% else %}
+            <a href="/login" class="px-4 py-2 text-sm font-semibold text-slate-300 hover:text-white transition-colors">
+                Sign In
+            </a>
+            <a href="/register" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-emerald-500/25 flex items-center gap-2">
+                Start Free <i class="fa-solid fa-arrow-right text-xs"></i>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<main class="flex-grow">
+    <!-- Hero Section -->
+    <section class="relative pt-16 pb-20 overflow-hidden">
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[350px] bg-gradient-to-tr from-emerald-600/15 to-cyan-500/10 blur-[130px] rounded-full pointer-events-none"></div>
+
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <!-- Live Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold mb-8 animate-bounce">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>Live Intent Radar : Over 2,410+ Active Buyer Threads Detected Today</span>
+            </div>
+
+            <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white leading-[1.15] mb-6">
+                Stop Burning $1,500 on Facebook Ads.<br class="hidden sm:inline">
+                <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Get Clients Who Are Literally Asking For Your SaaS Today.</span>
+            </h1>
+
+            <p class="max-w-2xl mx-auto text-lg text-slate-300 leading-relaxed mb-10">
+                LeadRadar AI scans Reddit & X 24/7, scores <strong class="text-white">buying intent (0–100%)</strong>, and drafts value-first 80/20 stealth replies that convert 10x better than cold advertising.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
+                <a href="/register" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-black text-base shadow-xl shadow-emerald-500/30 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-radar text-lg"></i>
+                    Launch Your Lead Radar Free
+                </a>
+                <a href="#demo" class="w-full sm:w-auto px-7 py-4 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-white font-bold text-base transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play text-xs text-emerald-400"></i>
+                    Test Live Interactive Demo
+                </a>
+            </div>
+
+            <!-- Social Proof Bar -->
+            <div class="pt-6 border-t border-slate-800/80 flex flex-wrap items-center justify-center gap-6 sm:gap-12 text-xs font-semibold text-slate-400">
+                <span class="flex items-center gap-2"><i class="fa-solid fa-shield-halved text-emerald-400"></i> 100% Anti-Ban (Value-First 80/20)</span>
+                <span class="flex items-center gap-2"><i class="fa-solid fa-bolt text-amber-400"></i> No Ad Spend Required ($0 CAC)</span>
+                <span class="flex items-center gap-2"><i class="fa-solid fa-credit-card text-cyan-400"></i> Lemon Squeezy & Grey Payouts Verified</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Live Demo Section (EFFET WOUAHOU) -->
+    <section id="demo" class="py-16 bg-slate-900/40 border-y border-slate-800/80 relative">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <h2 class="text-xs uppercase tracking-widest font-extrabold text-emerald-400 mb-2">Instant Live Simulation</h2>
+                <h3 class="text-3xl font-black text-white">Test The Radar Right Now On Any Keyword</h3>
+                <p class="text-sm text-slate-400 mt-2">Pick a topic or type your SaaS keywords to see high-intent buyers detected in real-time.</p>
+            </div>
+
+            <!-- Demo Console Box -->
+            <div class="glass-card rounded-2xl p-6 sm:p-8 shadow-2xl relative">
+                <!-- Search bar -->
+                <div class="flex flex-col sm:flex-row gap-3 mb-6">
+                    <div class="relative flex-grow">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input id="demo-keyword-input" type="text" value="missed calls" placeholder="Type keyword: missed calls, video demo, facebook ads, invoicing, leads..." 
+                               class="w-full pl-11 pr-4 py-3.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm font-medium transition-colors">
+                    </div>
+                    <button onclick="runDemoScan()" id="demo-scan-btn" class="px-6 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm rounded-xl transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 whitespace-nowrap">
+                        <i class="fa-solid fa-satellite-dish"></i> Scan Hot Leads
+                    </button>
+                </div>
+
+                <!-- Preset Chips -->
+                <div class="flex flex-wrap items-center gap-2 mb-8 text-xs">
+                    <span class="text-slate-400 font-semibold mr-1">Try quick presets:</span>
+                    <button onclick="setPresetKeyword('missed calls')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors">🚨 missed calls</button>
+                    <button onclick="setPresetKeyword('facebook ads')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors">💸 facebook ads</button>
+                    <button onclick="setPresetKeyword('demo video')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors">🎥 demo video</button>
+                    <button onclick="setPresetKeyword('lemon squeezy')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors">💳 lemon squeezy</button>
+                </div>
+
+                <!-- Results Feed -->
+                <div id="demo-results-container" class="space-y-4">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why LeadRadar Beats Paid Ads (Comparison) -->
+    <section id="comparison" class="py-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-14">
+            <h2 class="text-xs uppercase tracking-widest font-extrabold text-emerald-400 mb-2">The Real Math</h2>
+            <h3 class="text-3xl sm:text-4xl font-black text-white">Why Burning Cash On Facebook Ads Fails Solo Founders</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Old Way: Facebook Ads -->
+            <div class="p-8 rounded-2xl bg-rose-950/20 border border-rose-500/30 relative">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold text-lg">
+                        <i class="fa-solid fa-xmark"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-bold text-white">The Paid Ads Trap</h4>
+                        <p class="text-xs text-rose-400 font-semibold">Cold interruption marketing</p>
+                    </div>
+                </div>
+                <ul class="space-y-4 text-sm text-slate-300">
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-circle-xmark text-rose-400 mt-1"></i>
+                        <span><strong>$500 to $2,000 lost upfront</strong> just to train the Meta pixel with zero guaranteed sales.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-circle-xmark text-rose-400 mt-1"></i>
+                        <span><strong>Less than 1.2% click rate</strong> on cold audiences who were just scrolling memes.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-circle-xmark text-rose-400 mt-1"></i>
+                        <span>High stress, imposter syndrome, and <strong>5 to 7 months without paying customers</strong>.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- New Way: LeadRadar AI -->
+            <div class="p-8 rounded-2xl bg-emerald-950/20 border border-emerald-500/40 relative glow-emerald">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500 text-slate-950 flex items-center justify-center font-bold text-lg">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-bold text-white">LeadRadar AI (Organic Intent)</h4>
+                        <p class="text-xs text-emerald-400 font-semibold">Direct buyer demand capture</p>
+                    </div>
+                </div>
+                <ul class="space-y-4 text-sm text-slate-300">
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-circle-check text-emerald-400 mt-1"></i>
+                        <span><strong>$0 ad budget required:</strong> Engage people who are <em>already</em> asking for recommendations.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-circle-check text-emerald-400 mt-1"></i>
+                        <span><strong>30% to 40% reply and click-through rate</strong> on high-intent problems.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-circle-check text-emerald-400 mt-1"></i>
+                        <span><strong>Value-First 80/20 replies:</strong> You are seen as an expert solving their problem, not a spammer.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-20 bg-slate-900/30 border-t border-slate-800/80">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-xs uppercase tracking-widest font-extrabold text-emerald-400 mb-2">Simple 3-Step Engine</h2>
+                <h3 class="text-3xl font-black text-white">From 0 Traffic To Paying SaaS Clients In 15 Minutes</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-card p-6 rounded-2xl text-center">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl font-bold mx-auto mb-5">
+                        1
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-2">Set Your Keywords</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Input the problems your SaaS solves (e.g. "missed calls", "abandoned cart", "video demo").
+                    </p>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl text-center">
+                    <div class="w-14 h-14 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center text-xl font-bold mx-auto mb-5">
+                        2
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-2">AI Analyzes Buying Intent</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Our engine scores posts from 0 to 100%. Filter out time-wasters and get alerted on HOT leads only.
+                    </p>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl text-center">
+                    <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl font-bold mx-auto mb-5">
+                        3
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-2">1-Click Stealth Reply</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Copy the AI-generated 80/20 answer with your tracked link. Post it in 15 seconds and watch warm traffic flow.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-14">
+            <h2 class="text-xs uppercase tracking-widest font-extrabold text-emerald-400 mb-2">Transparent Pricing</h2>
+            <h3 class="text-3xl sm:text-4xl font-black text-white">Invest Less Than A Single Day of Wasted Facebook Ads</h3>
+            <p class="text-sm text-slate-400 mt-2">No hidden contracts. Cancel in 1 click anytime.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+            <!-- Starter Plan ($29/mo) -->
+            <div class="glass-card rounded-2xl p-8 border border-slate-700/80 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs uppercase font-extrabold px-3 py-1 rounded-full bg-slate-800 text-slate-300">Starter</span>
+                        <span class="text-xs text-slate-400">Solo Bootstrappers</span>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-6">
+                        <span class="text-5xl font-black text-white">$29</span>
+                        <span class="text-slate-400 text-sm font-semibold">/ month</span>
+                    </div>
+                    <ul class="space-y-3.5 text-sm text-slate-300 mb-8">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> 5 Monitored Keywords & Subreddits</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> Reddit & X Buying Intent Radar</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> 50 AI Stealth Replies / month (80/20 rule)</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> Tracked Redirect Links & Click Analytics</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> 100% Anti-Ban Formatting</li>
+                    </ul>
+                </div>
+                <a href="/register?plan=starter" class="w-full py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm text-center transition-colors block">
+                    Get Started with Starter
+                </a>
+            </div>
+
+            <!-- Growth Plan ($69/mo) -->
+            <div class="glass-card rounded-2xl p-8 border-2 border-emerald-500/60 relative glow-emerald flex flex-col justify-between bg-gradient-to-b from-slate-900 to-slate-950">
+                <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-emerald-500 text-slate-950 text-xs font-black uppercase tracking-wider shadow-md">
+                    Most Popular
+                </div>
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs uppercase font-extrabold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300">Growth Pro</span>
+                        <span class="text-xs text-emerald-400 font-semibold">Serious SaaS Founders</span>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-6">
+                        <span class="text-5xl font-black text-white">$69</span>
+                        <span class="text-slate-400 text-sm font-semibold">/ month</span>
+                    </div>
+                    <ul class="space-y-3.5 text-sm text-slate-200 mb-8">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> <strong>Unlimited</strong> Monitored Keywords</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> <strong>Unlimited</strong> AI Stealth Replies</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> Instant Email & Telegram Alerts on HOT Leads</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> Multiple SaaS Products Supported</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> Priority Discord Founder Community</li>
+                    </ul>
+                </div>
+                <a href="/register?plan=growth" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm text-center transition-all shadow-lg shadow-emerald-500/30 block">
+                    Upgrade to Growth Pro
+                </a>
+            </div>
+        </div>
+
+        <!-- Payout Security Notice -->
+        <div class="mt-12 text-center text-xs text-slate-500 max-w-xl mx-auto flex items-center justify-center gap-2">
+            <i class="fa-solid fa-lock text-emerald-400"></i>
+            <span>Payments processed globally by Lemon Squeezy (Merchant of Record). Payouts cleared securely via Lead Bank (Grey USD ACH ••••9479).</span>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-slate-800/80 bg-[#060910] py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div class="flex items-center gap-2 font-bold text-slate-300">
+            <i class="fa-solid fa-radar text-emerald-400"></i> LeadRadar AI © 2026. All rights reserved.
+        </div>
+        <div class="flex items-center gap-6">
+            <a href="/login" class="hover:text-slate-300 transition-colors">Founder Login</a>
+            <a href="#demo" class="hover:text-slate-300 transition-colors">Live Demo</a>
+            <a href="#pricing" class="hover:text-slate-300 transition-colors">Pricing</a>
+        </div>
+    </div>
+</footer>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    async function runDemoScan() {
+        const input = document.getElementById('demo-keyword-input');
+        const btn = document.getElementById('demo-scan-btn');
+        const container = document.getElementById('demo-results-container');
+        const keyword = input.value.trim() || 'missed calls';
+
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Scanning Reddit & X...`;
+
+        try {
+            const res = await fetch(`/api/demo-scan?keyword=${encodeURIComponent(keyword)}`);
+            const data = await res.json();
+            
+            if (!data.leads || data.leads.length === 0) {
+                container.innerHTML = `<div class="p-6 text-center text-slate-400 text-sm">No leads matched. Try 'missed calls' or 'facebook ads'.</div>`;
+                return;
+            }
+
+            container.innerHTML = data.leads.map((l, index) => `
+                <div class="p-5 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/40 transition-all">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <div class="flex items-center gap-2 text-xs">
+                            <span class="px-2.5 py-0.5 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20 font-bold flex items-center gap-1">
+                                <i class="fa-brands fa-reddit"></i> r/${l.subreddit}
+                            </span>
+                            <span class="text-slate-400">by u/${l.author}</span>
+                            <span class="text-slate-500">• ${l.time_ago}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-black ${
+                                l.intent_score >= 80 ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
+                            }">
+                                ${l.intent_score}% BUYING INTENT 🔥
+                            </span>
+                        </div>
+                    </div>
+
+                    <h4 class="text-base font-bold text-white mb-2 leading-snug">${l.title}</h4>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-4">${l.content}</p>
+
+                    <!-- Stealth Reply Box -->
+                    <div class="p-3.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300 mb-3">
+                        <div class="flex items-center justify-between text-[11px] text-emerald-400 font-bold mb-1.5 uppercase tracking-wider">
+                            <span><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> AI 80/20 Stealth Reply Preview</span>
+                            <span class="text-slate-500 font-normal">80% Value + 20% Plug</span>
+                        </div>
+                        <p class="italic text-slate-200">"Hey u/${l.author}, this is a classic bottleneck... Map out the friction before patching it. Full transparency: I built CallCatch AI to handle this automatically..."</p>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2 border-t border-slate-800/80 text-xs">
+                        <a href="${l.original_url}" target="_blank" class="text-slate-400 hover:text-white flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> View Thread on Reddit
+                        </a>
+                        <a href="/register" class="text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1">
+                            Unlock Full Auto-Drafter <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+
+        } catch (err) {
+            container.innerHTML = `<div class="p-4 text-center text-rose-400 text-xs">Error scanning leads. Please try again.</div>`;
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-solid fa-satellite-dish"></i> Scan Hot Leads`;
+        }
+    }
+
+    function setPresetKeyword(kw) {
+        document.getElementById('demo-keyword-input').value = kw;
+        runDemoScan();
+    }
+
+    // Auto run first scan on page load
+    window.addEventListener('DOMContentLoaded', () => {
+        runDemoScan();
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "dashboard/layout.html" %}
+
+{% block title %}Traffic & Conversion Analytics — LeadRadar AI{% endblock %}
+
+{% block dashboard_content %}
+<div class="space-y-6 max-w-6xl">
+    <!-- Header -->
+    <div class="glass-card rounded-2xl p-6 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-slate-800">
+        <h1 class="text-2xl font-black text-white mb-1">Traffic & Conversion Analytics</h1>
+        <p class="text-xs text-slate-400">
+            Real-time tracking of visitors redirected from your 80/20 stealth replies to <strong class="text-white">{{ user.product_name }}</strong>.
+        </p>
+    </div>
+
+    <!-- Metrics Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="glass-card p-5 rounded-xl border border-cyan-500/20">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                <span>Total Warm Clicks Generated</span>
+                <i class="fa-solid fa-arrow-pointer text-cyan-400"></i>
+            </div>
+            <div class="text-3xl font-black text-cyan-400">{{ total_clicks }}</div>
+            <div class="text-[11px] text-slate-400 mt-1">100% organic, $0 spent on ads</div>
+        </div>
+
+        <div class="glass-card p-5 rounded-xl border border-emerald-500/20">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                <span>Reply-to-Click Conversion Rate</span>
+                <i class="fa-solid fa-percent text-emerald-400"></i>
+            </div>
+            <div class="text-3xl font-black text-emerald-400">{{ conversion_rate }}%</div>
+            <div class="text-[11px] text-emerald-400/90 font-semibold mt-1">vs 1.2% industry average on Facebook Ads</div>
+        </div>
+
+        <div class="glass-card p-5 rounded-xl border border-amber-500/20">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                <span>Estimated Ad Spend Saved</span>
+                <i class="fa-solid fa-piggy-bank text-amber-400"></i>
+            </div>
+            <div class="text-3xl font-black text-amber-400">${{ ad_spend_saved }}</div>
+            <div class="text-[11px] text-slate-400 mt-1">Based on $3.50 average Meta Ads CPC in B2B</div>
+        </div>
+    </div>
+
+    <!-- Live Visitors Log Table -->
+    <div class="glass-card rounded-2xl p-6">
+        <h2 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-satellite text-emerald-400"></i> Recent Traffic Events via Tracked Links
+        </h2>
+
+        {% if not recent_clicks %}
+        <div class="p-8 text-center text-slate-400 text-xs">
+            No link clicks recorded yet. Copy and post stealth replies to start tracking real traffic!
+        </div>
+        {% else %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-300">
+                <thead class="text-[10px] uppercase font-bold text-slate-400 border-b border-slate-800 bg-slate-900/50">
+                    <tr>
+                        <th class="py-3 px-4">Timestamp</th>
+                        <th class="py-3 px-4">Lead Source</th>
+                        <th class="py-3 px-4">Target Landing</th>
+                        <th class="py-3 px-4">Referrer</th>
+                        <th class="py-3 px-4 text-right">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800">
+                    {% for c in recent_clicks %}
+                    <tr class="hover:bg-slate-900/40 transition-colors">
+                        <td class="py-3 px-4 text-slate-400 font-mono text-[11px]">{{ c.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td class="py-3 px-4">
+                            <span class="font-bold text-white">{{ c.lead.title[:45] }}...</span>
+                            <div class="text-[10px] text-slate-500">r/{{ c.lead.subreddit }}</div>
+                        </td>
+                        <td class="py-3 px-4 text-emerald-400 font-semibold truncate max-w-xs">{{ user.product_url }}</td>
+                        <td class="py-3 px-4 text-slate-400">{{ c.referrer or 'Reddit Referral' }}</td>
+                        <td class="py-3 px-4 text-right">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Redirected 200 OK</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

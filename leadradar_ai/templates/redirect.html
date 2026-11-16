@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="1;url={{ target_url }}">
+    <title>Connecting to Verified Solution — LeadRadar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #080c14; font-family: sans-serif; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 text-slate-100">
+    <div class="max-w-md w-full p-8 rounded-2xl bg-slate-900/90 border border-slate-800 text-center shadow-2xl">
+        <div class="w-14 h-14 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-2xl mx-auto mb-4 animate-pulse">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </div>
+        <h2 class="text-lg font-bold text-white mb-1">Redirecting you to {{ product_name }}...</h2>
+        <p class="text-xs text-slate-400 mb-6">Connecting to founder's verified solution.</p>
+
+        <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden mb-6">
+            <div class="bg-gradient-to-r from-emerald-500 to-cyan-400 h-1.5 rounded-full animate-pulse w-3/4"></div>
+        </div>
+
+        <a href="{{ target_url }}" class="text-xs text-emerald-400 hover:underline">
+            Click here if you are not redirected automatically within 2 seconds &rarr;
+        </a>
+    </div>
+</body>
+</html>

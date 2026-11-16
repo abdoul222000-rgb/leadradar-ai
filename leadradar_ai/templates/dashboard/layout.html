@@ -1,0 +1,341 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col md:flex-row bg-[#070a10]">
+    <!-- Mobile Header -->
+    <div class="md:hidden flex items-center justify-between px-4 py-3 bg-[#0a0f18] border-b border-slate-800">
+        <a href="/dashboard" class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-slate-950 font-black text-sm">
+                <i class="fa-solid fa-radar"></i>
+            </div>
+            <span class="font-extrabold text-white text-base">Lead<span class="text-emerald-400">Radar</span></span>
+        </a>
+        <div class="flex items-center gap-2">
+            <!-- Bouton Langue Mobile -->
+            <button onclick="toggleDashboardLanguage()" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white font-bold flex items-center gap-1.5 shadow-sm hover:border-emerald-500 transition-colors">
+                <span class="lang-flag-icon">🇫🇷</span>
+                <span class="lang-text-code">FR</span>
+            </button>
+            <span class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase {{ 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' if user.plan != 'FREE' else 'bg-slate-800 text-slate-400' }}">
+                {{ user.plan }}
+            </span>
+            <a href="/logout" class="p-2 text-slate-400 hover:text-rose-400"><i class="fa-solid fa-power-off"></i></a>
+        </div>
+    </div>
+
+    <!-- Desktop Sidebar -->
+    <aside class="w-64 bg-[#090d16] border-r border-slate-800/80 flex flex-col justify-between p-5 hidden md:flex shrink-0">
+        <div>
+            <!-- Brand -->
+            <a href="/dashboard" class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-400 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-emerald-500/20">
+                    <i class="fa-solid fa-radar"></i>
+                </div>
+                <div>
+                    <span class="text-lg font-black text-white">Lead<span class="text-emerald-400">Radar</span></span>
+                    <p class="text-[9px] text-slate-400 font-semibold uppercase tracking-widest">Growth Engine</p>
+                </div>
+            </a>
+
+            <!-- User SaaS Context -->
+            <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 mb-6">
+                <div class="flex items-center justify-between text-[11px] mb-1">
+                    <span class="text-slate-400 font-semibold uppercase tracking-wider">Active Product</span>
+                    <span class="px-1.5 py-0.2 rounded text-[9px] font-black uppercase {{ 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' if user.plan != 'FREE' else 'bg-amber-500/10 text-amber-400 border border-amber-500/20' }}">
+                        {{ user.plan }}
+                    </span>
+                </div>
+                <div class="text-sm font-bold text-white truncate">{{ user.product_name }}</div>
+                <a href="{{ user.product_url }}" target="_blank" class="text-[11px] text-emerald-400 hover:underline truncate block mt-0.5">
+                    {{ user.product_url }}
+                </a>
+            </div>
+
+            <!-- Nav Links -->
+            <nav class="space-y-1.5 text-sm font-semibold">
+                <a href="/dashboard" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all {{ 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold' if active_page == 'radar' else 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
+                    <i class="fa-solid fa-satellite-dish w-5 text-center"></i>
+                    <span>Live Lead Radar</span>
+                </a>
+                <a href="/dashboard/keywords" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all {{ 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold' if active_page == 'keywords' else 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
+                    <i class="fa-solid fa-tags w-5 text-center"></i>
+                    <span>Keywords & Alerts</span>
+                </a>
+                <a href="/dashboard/analytics" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all {{ 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold' if active_page == 'analytics' else 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
+                    <i class="fa-solid fa-chart-line w-5 text-center"></i>
+                    <span>Traffic & Conversion</span>
+                </a>
+                <a href="/dashboard/billing" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all {{ 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold' if active_page == 'billing' else 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
+                    <i class="fa-solid fa-credit-card w-5 text-center"></i>
+                    <span>Billing & Grey Payouts</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Bottom User / Logout -->
+        <div class="pt-5 border-t border-slate-800">
+            <div class="flex items-center justify-between">
+                <div class="truncate pr-2">
+                    <div class="text-xs font-bold text-white truncate">{{ user.email }}</div>
+                    <div class="text-[10px] text-slate-500">Founder Account</div>
+                </div>
+                <a href="/logout" title="Sign Out" class="p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-grow flex flex-col min-w-0">
+        <!-- Top status bar -->
+        <header class="h-16 border-b border-slate-800/80 bg-[#090d16]/60 backdrop-blur-md px-6 flex items-center justify-between hidden md:flex">
+            <div class="flex items-center gap-3 text-xs text-slate-400">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Live Scanner Active
+                </span>
+                <span>Reddit & Twitter streams continuously monitored</span>
+            </div>
+
+            <div class="flex items-center gap-3 text-xs font-semibold">
+                <!-- Bouton Traduction Français / Anglais en Haut à Droite -->
+                <button id="lang-toggle-btn" onclick="toggleDashboardLanguage()" 
+                        class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-emerald-500/50 hover:border-emerald-400 text-slate-100 font-bold transition-all shadow-md hover:shadow-emerald-500/10 group cursor-pointer"
+                        title="Basculer la langue du dashboard (Français / English)">
+                    <span class="lang-flag-icon text-sm">🇫🇷</span>
+                    <span class="lang-text-label text-xs">Français</span>
+                    <i class="fa-solid fa-repeat text-emerald-400 text-[10px] ml-0.5 group-hover:rotate-180 transition-transform duration-300"></i>
+                </button>
+
+                {% if user.plan == 'FREE' %}
+                <a href="/dashboard/billing" class="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-black flex items-center gap-1.5 transition-all shadow-md shadow-emerald-500/20">
+                    <i class="fa-solid fa-bolt"></i> Upgrade to Starter ($29/mo)
+                </a>
+                {% else %}
+                <span class="px-3 py-1 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
+                    <i class="fa-solid fa-crown text-amber-400"></i> Plan {{ user.plan }} Active
+                </span>
+                {% endif %}
+            </div>
+        </header>
+
+        <!-- Page Body -->
+        <main class="flex-grow p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+            {% block dashboard_content %}{% endblock %}
+        </main>
+    </div>
+</div>
+
+<!-- Script de Traduction Intégrale en Français pour le Dashboard -->
+<script>
+    const I18N_EN_TO_FR = {
+        // Navigation & Barre latérale
+        "Live Lead Radar": "Radar de Prospects en Direct",
+        "Keywords & Alerts": "Mots-Clés & Alertes",
+        "Traffic & Conversion": "Trafic & Conversion",
+        "Billing & Grey Payouts": "Facturation & Virements Grey",
+        "Active Product": "Produit Actif",
+        "Growth Engine": "Moteur de Croissance",
+        "Founder Account": "Compte Fondateur",
+        "Live Scanner Active": "Scanner en Direct Actif",
+        "Reddit & Twitter streams continuously monitored": "Flux Reddit & Twitter surveillés en continu 24/7",
+        "Plan GROWTH Active": "Plan GROWTH Actif",
+        "Plan STARTER Active": "Plan STARTER Actif",
+        "Plan FREE Active": "Plan Gratuit",
+        "Upgrade to Starter ($29/mo)": "Passer au Plan Starter (29$/mois)",
+        "Sign Out": "Déconnexion",
+
+        // Dashboard Principal (Feed)
+        "Active Radar Feed": "Flux Radar Actif",
+        "Prospects Looking For Solutions Right Now": "Prospects Cherchant une Solution Maintenant",
+        "Monitoring posts for": "Surveillance des opportunités pour",
+        "Click any lead to generate an anti-ban 80/20 stealth reply.": "Cliquez sur un prospect pour générer une réponse furtive 80/20 anti-bannissement.",
+        "Scan Now": "Scanner Maintenant",
+        "Total Leads Detected": "Total Prospects Détectés",
+        "Across Reddit & Twitter": "Sur Reddit & Twitter",
+        "HOT Buying Intent (80%+)": "Intention d'Achat Élevée (80%+)",
+        "Urgent pain point expressed": "Problème urgent exprimé par l'auteur",
+        "Tracked Link Clicks": "Clics sur Liens Trackés",
+        "Sent to": "Envoyés vers",
+        "Est. Pipeline Value": "Valeur Estimée du Pipeline",
+        "At $29/mo average LTV": "Sur une base de 29$/mois par client",
+        "All Leads": "Tous les Prospects",
+        "Hot Leads Only": "Prospects Chauds (Urgents)",
+        "Warm Leads": "Prospects Tièdes",
+        "Showing": "Affichage de",
+        "opportunities": "opportunités",
+        "BUYING INTENT": "INTENTION D'ACHAT",
+        "HIGH Urgency": "Urgence ÉLEVÉE",
+        "MEDIUM Urgency": "Urgence MOYENNE",
+        "LOW Urgency": "Urgence FAIBLE",
+        "Urgency": "Urgence",
+        "Detected Core Pain:": "Problème Détecté :",
+        "View Thread on Reddit": "Voir la Discussion sur Reddit",
+        "clicks on your link": "clics vers votre lien",
+        "1-Click Stealth Reply": "Réponse Furtive 1-Clic",
+        "Quick Copy": "Copie Rapide",
+        "80/20 Stealth Reply Generator": "Générateur de Réponse Furtive 80/20",
+        "Replying to": "En réponse à",
+        "Anti-Ban Formula:": "Formule Anti-Bannissement :",
+        "80% genuine peer value + 20% natural SaaS recommendation with your tracked link.": "80% de conseils d'expert bienveillants + 20% de recommandation naturelle avec votre lien tracké.",
+        "Reply Content (Customizable)": "Texte de la Réponse (Modifiable)",
+        "Tracked redirect link already embedded": "Lien de redirection tracké déjà intégré",
+        "Cancel": "Annuler",
+        "Copy To Clipboard": "Copier dans le Presse-Papier",
+        "No Leads Found in this View": "Aucun prospect dans cette vue",
+        "Click Scan Now or add new keywords to trigger live discovery.": "Cliquez sur Scanner Maintenant ou ajoutez de nouveaux mots-clés.",
+        "Scan New Leads Now": "Scanner de Nouveaux Prospects",
+
+        // Page Mots-clés & Alertes
+        "Monitored Keywords & Triggers": "Mots-Clés et Déclencheurs Surveillés",
+        "LeadRadar AI monitors these terms 24/7 across Reddit and Twitter. When a user expresses buying intent, it triggers an instant alert.": "LeadRadar AI surveille ces expressions 24/7 sur Reddit et Twitter. Dès qu'un utilisateur exprime une intention d'achat, une alerte est déclenchée en direct.",
+        "Add New Monitored Keyword": "Ajouter un Nouveau Mot-Clé Surveillé",
+        "Keyword / Problem Phrase": "Mot-Clé / Expression du Problème",
+        "Platform": "Plateforme",
+        "Target Subreddit": "Subreddit Cible",
+        "Add & Activate Radar": "Ajouter & Activer le Radar",
+        "Active Radar Streams": "Flux Radar Actifs",
+        "Active": "Actif",
+        "Added": "Ajouté le",
+        "Delete Keyword": "Supprimer le Mot-Clé",
+        "Reddit (Subreddits)": "Reddit (Subreddits)",
+        "Twitter / X Stream": "Flux Twitter / X",
+
+        // Page Analytics & Trafic
+        "Traffic & Conversion Analytics": "Analytiques de Trafic & Conversion",
+        "Real-time tracking of visitors redirected from your 80/20 stealth replies to": "Suivi en direct des visiteurs redirigés depuis vos réponses furtives 80/20 vers",
+        "Total Warm Clicks Generated": "Total Clics Qualifiés Générés",
+        "100% organic, $0 spent on ads": "100% organique, 0 $ dépensé en publicité",
+        "Reply-to-Click Conversion Rate": "Taux de Conversion (Réponses vers Clics)",
+        "vs 1.2% industry average on Facebook Ads": "contre 1,2% de moyenne sur Facebook Ads",
+        "Estimated Ad Spend Saved": "Budget Publicitaire Économisé Estimé",
+        "Based on $3.50 average Meta Ads CPC in B2B": "Basé sur un coût par clic moyen de 3,50 $ sur Meta Ads en B2B",
+        "Recent Traffic Events via Tracked Links": "Événements Récents via les Liens Trackés",
+        "Timestamp": "Date & Heure",
+        "Lead Source": "Source du Prospect",
+        "Target Landing": "Page d'Arrivée Cible",
+        "Referrer": "Référent",
+        "Status": "Statut",
+        "Redirected 200 OK": "Redirigé 200 OK",
+
+        // Page Facturation & Payouts Grey USD
+        "Billing & Payout Infrastructure": "Infrastructure de Facturation & Virements",
+        "Automated subscription processing via Lemon Squeezy Merchant of Record with direct ACH clearing to Lead Bank (Grey USD).": "Encaissement automatique via Lemon Squeezy (Merchant of Record) avec virement direct ACH vers Lead Bank (Grey USD).",
+        "Current Plan :": "Plan Actuel :",
+        "Current Plan : GROWTH": "Plan Actuel : GROWTH (Pro)",
+        "Current Plan : STARTER": "Plan Actuel : STARTER",
+        "Current Plan : FREE": "Plan Actuel : GRATUIT",
+        "Verified Payout Account Destination (Grey.co USD)": "Compte Bancaire de Virement Vérifié (Grey.co USD)",
+        "Banking Institution": "Établissement Bancaire",
+        "United States (USD ACH)": "États-Unis (Virement ACH USD)",
+        "Account Holder": "Titulaire du Compte",
+        "Authorized Founder": "Fondateur Autorisé",
+        "Account Number": "Numéro de Compte",
+        "Checking Account": "Compte Courant (Checking)",
+        "Routing Number (ABA)": "Numéro de Routage (ABA)",
+        "Direct ACH Clearing": "Compensation Directe ACH",
+        "Payout Frequency :": "Fréquence des Virements :",
+        "Bi-weekly / Weekly transfers from Lemon Squeezy straight to your Grey USD balance.": "Virements hebdomadaires ou bi-mensuels de Lemon Squeezy vers votre solde Grey USD.",
+        "Standard 14-21 day rolling buffer applied to initial transactions": "Période de sécurité standard de 14 à 21 jours appliquée aux premières transactions",
+        "Starter Plan": "Plan Starter",
+        "Solo Bootstrappers": "Créateurs Solo",
+        "Growth Pro": "Plan Growth Pro",
+        "Most Popular": "Le Plus Populaire",
+        "Serious SaaS Founders": "Fondateurs SaaS Ambitieux",
+        "5 Monitored Keywords & Subreddits": "5 Mots-Clés et Subreddits Surveillés",
+        "50 AI Stealth Replies / month": "50 Réponses Furtives IA / mois",
+        "Tracked Redirect Links": "Liens de Redirection Trackés",
+        "100% Anti-Ban Formatting": "Formatage 100% Anti-Bannissement",
+        "Unlimited Monitored Keywords": "Mots-Clés Surveillés ILLIMITÉS",
+        "Unlimited AI Stealth Replies": "Réponses Furtives IA ILLIMITÉES",
+        "Instant Real-Time Email/Telegram Alerts": "Alertes Email/Telegram en Temps Réel",
+        "Multiple SaaS Products Supported": "Gestion Multi-Produits SaaS",
+        "Priority Discord Founder Community": "Communauté Privée Fondateurs",
+        "Subscribe via Lemon Squeezy": "S'abonner via Lemon Squeezy",
+        "Simulate Instant $29 Upgrade (Test Mode)": "Simuler Upgrade 29$ Immédiat (Mode Test)",
+        "Simulate Instant $69 Upgrade (Test Mode)": "Simuler Upgrade 69$ Immédiat (Mode Test)",
+        "Your Lemon Squeezy Webhook Endpoint": "Votre URL de Webhook Lemon Squeezy",
+        "Copy this endpoint and paste it into your": "Copiez cette URL et collez-la dans vos",
+        "Recent Payment & Clearance Transactions": "Historique des Paiements et Virements",
+        "No transactions recorded yet. Use the Test Mode button above to test the clearance flow!": "Aucune transaction enregistrée pour l'instant. Utilisez le bouton Mode Test ci-dessus pour tester !",
+        "Target:": "Destination :",
+        "Copy": "Copier"
+    };
+
+    // Dictionnaire Inverse pour revenir en Anglais si besoin
+    const I18N_FR_TO_EN = {};
+    for (let [en, fr] of Object.entries(I18N_EN_TO_FR)) {
+        I18N_FR_TO_EN[fr] = en;
+    }
+
+    // Récupérer la langue actuelle (par défaut Français 'fr' pour le confort de l'utilisateur)
+    let currentDashboardLang = localStorage.getItem('leadradar_lang') || 'fr';
+
+    function applyTranslations(lang) {
+        const dict = lang === 'fr' ? I18N_EN_TO_FR : I18N_FR_TO_EN;
+
+        // Fonction récursive de remplacement sur les noeuds texte
+        function walkTextNodes(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const trimmed = node.nodeValue.trim();
+                if (trimmed && dict[trimmed]) {
+                    node.nodeValue = node.nodeValue.replace(trimmed, dict[trimmed]);
+                }
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                // Ne pas traduire les balises de code ou de script
+                if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE' || node.tagName === 'CODE') return;
+
+                // Traduire les placeholders d'input
+                if (node.placeholder && dict[node.placeholder.trim()]) {
+                    node.placeholder = dict[node.placeholder.trim()];
+                }
+
+                // Traduire les options des selects
+                if (node.tagName === 'OPTION' && dict[node.text.trim()]) {
+                    node.text = dict[node.text.trim()];
+                }
+
+                for (let child of node.childNodes) {
+                    walkTextNodes(child);
+                }
+            }
+        }
+
+        walkTextNodes(document.body);
+
+        // Mettre à jour l'affichage des boutons
+        document.querySelectorAll('.lang-flag-icon').forEach(el => {
+            el.innerText = lang === 'fr' ? '🇫🇷' : '🇬🇧';
+        });
+        document.querySelectorAll('.lang-text-label').forEach(el => {
+            el.innerText = lang === 'fr' ? 'Français' : 'English';
+        });
+        document.querySelectorAll('.lang-text-code').forEach(el => {
+            el.innerText = lang === 'fr' ? 'FR' : 'EN';
+        });
+
+        // Enregistrer la préférence
+        localStorage.setItem('leadradar_lang', lang);
+    }
+
+    function toggleDashboardLanguage() {
+        const nextLang = currentDashboardLang === 'fr' ? 'en' : 'fr';
+        currentDashboardLang = nextLang;
+        applyTranslations(nextLang);
+        showToast(nextLang === 'fr' ? 'Dashboard basculé en Français 🇫🇷' : 'Dashboard switched to English 🇬🇧', 'success');
+    }
+
+    // Application automatique au chargement de chaque page
+    window.addEventListener('DOMContentLoaded', () => {
+        // Appliquer automatiquement le français par défaut si souhaité
+        if (currentDashboardLang === 'fr') {
+            applyTranslations('fr');
+        } else {
+            // Mettre à jour le bouton sur English
+            document.querySelectorAll('.lang-flag-icon').forEach(el => el.innerText = '🇬🇧');
+            document.querySelectorAll('.lang-text-label').forEach(el => el.innerText = 'English');
+            document.querySelectorAll('.lang-text-code').forEach(el => el.innerText = 'EN');
+        }
+    });
+</script>
+{% endblock %}

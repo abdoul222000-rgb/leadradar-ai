@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account — LeadRadar AI{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden">
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-500/10 blur-[100px] rounded-full pointer-events-none"></div>
+
+    <div class="w-full max-w-lg relative z-10">
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <a href="/" class="inline-flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-400 flex items-center justify-center text-slate-950 font-black text-2xl shadow-lg shadow-emerald-500/25">
+                    <i class="fa-solid fa-radar"></i>
+                </div>
+                <div class="text-left">
+                    <span class="text-2xl font-black text-white">Lead<span class="text-emerald-400">Radar</span></span>
+                    <p class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase">Onboarding</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Card -->
+        <div class="glass-card rounded-2xl p-8 shadow-2xl">
+            <h2 class="text-xl font-black text-white mb-1">Launch Your Lead Radar</h2>
+            <p class="text-xs text-slate-400 mb-6">Tell us what your SaaS does. We'll automatically seed your first 5 high-intent buyer leads.</p>
+
+            {% if error %}
+            <div class="p-3.5 mb-5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold flex items-center gap-2.5">
+                <i class="fa-solid fa-circle-exclamation text-rose-400"></i>
+                <span>{{ error }}</span>
+            </div>
+            {% endif %}
+
+            <form method="POST" action="/register" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Email Address</label>
+                        <input type="email" name="email" placeholder="you@domain.com" required 
+                               class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 text-sm font-medium transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Password</label>
+                        <input type="password" name="password" placeholder="At least 6 characters" required 
+                               class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 text-sm font-medium transition-colors">
+                    </div>
+                </div>
+
+                <div class="pt-2 border-t border-slate-800">
+                    <div class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-400 mb-3">
+                        <i class="fa-solid fa-rocket mr-1"></i> Your SaaS Details (For 80/20 Stealth Replies)
+                    </div>
+
+                    <div class="space-y-3.5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Product Name</label>
+                                <input type="text" name="product_name" value="CallCatch AI" placeholder="e.g. CallCatch AI" required 
+                                       class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 text-sm font-medium transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Website / Landing URL</label>
+                                <input type="url" name="product_url" value="https://callcatch.ai" placeholder="https://yoursaas.com" required 
+                                       class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 text-sm font-medium transition-colors">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">One-Sentence Value Pitch</label>
+                            <textarea name="product_pitch" rows="2" required 
+                                      class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 text-sm font-medium transition-colors">Captures missed calls for contractors and sends immediate AI SMS so you never lose emergency jobs.</textarea>
+                            <p class="text-[11px] text-slate-500 mt-1">Our AI stealth generator will weave this naturally into expert replies.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 mt-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm transition-all shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-satellite-dish"></i> Create Account & Seed Leads
+                </button>
+            </form>
+        </div>
+
+        <p class="text-center text-xs text-slate-400 mt-6">
+            Already have an account? 
+            <a href="/login" class="text-emerald-400 hover:text-emerald-300 font-bold">Sign in here</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

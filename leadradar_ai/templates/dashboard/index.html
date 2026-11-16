@@ -1,0 +1,244 @@
+{% extends "dashboard/layout.html" %}
+
+{% block title %}Live Lead Radar — LeadRadar AI{% endblock %}
+
+{% block dashboard_content %}
+<div class="space-y-6">
+    <!-- Top Hero Banner -->
+    <div class="glass-card rounded-2xl p-6 relative overflow-hidden bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-950 border border-emerald-500/30">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Active Radar Feed</span>
+                </div>
+                <h1 class="text-2xl font-black text-white">Prospects Looking For Solutions Right Now</h1>
+                <p class="text-xs text-slate-300 mt-1">
+                    Monitoring posts for <strong class="text-white">{{ user.product_name }}</strong>. Click any lead to generate an anti-ban 80/20 stealth reply.
+                </p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <form method="POST" action="/dashboard/scan-now">
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition-all shadow-lg shadow-emerald-500/25 flex items-center gap-2">
+                        <i class="fa-solid fa-arrows-rotate"></i> Scan Now
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Metric Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="glass-card p-5 rounded-xl">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                <span>Total Leads Detected</span>
+                <i class="fa-solid fa-radar text-emerald-400"></i>
+            </div>
+            <div class="text-3xl font-black text-white">{{ stats.total_leads }}</div>
+            <div class="text-[11px] text-slate-400 mt-1">Across Reddit & Twitter</div>
+        </div>
+
+        <div class="glass-card p-5 rounded-xl border-emerald-500/20">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                <span>HOT Buying Intent (80%+)</span>
+                <i class="fa-solid fa-fire text-amber-400"></i>
+            </div>
+            <div class="text-3xl font-black text-amber-400">{{ stats.hot_leads }}</div>
+            <div class="text-[11px] text-emerald-400 font-semibold mt-1">Urgent pain point expressed</div>
+        </div>
+
+        <div class="glass-card p-5 rounded-xl">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                <span>Tracked Link Clicks</span>
+                <i class="fa-solid fa-arrow-pointer text-cyan-400"></i>
+            </div>
+            <div class="text-3xl font-black text-cyan-400">{{ stats.total_clicks }}</div>
+            <div class="text-[11px] text-slate-400 mt-1">Sent to {{ user.product_url }}</div>
+        </div>
+
+        <div class="glass-card p-5 rounded-xl">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                <span>Est. Pipeline Value</span>
+                <i class="fa-solid fa-dollar-sign text-emerald-400"></i>
+            </div>
+            <div class="text-3xl font-black text-emerald-400">${{ stats.pipeline_value }}</div>
+            <div class="text-[11px] text-slate-400 mt-1">At $29/mo average LTV</div>
+        </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+        <div class="flex items-center gap-2 text-xs font-semibold">
+            <a href="/dashboard" class="px-3.5 py-1.5 rounded-lg {{ 'bg-slate-800 text-white border border-slate-700' if not filter_badge else 'text-slate-400 hover:text-white' }}">
+                All Leads ({{ stats.total_leads }})
+            </a>
+            <a href="/dashboard?filter=HOT" class="px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 {{ 'bg-amber-500/20 text-amber-300 border border-amber-500/30' if filter_badge == 'HOT' else 'text-slate-400 hover:text-white' }}">
+                <i class="fa-solid fa-fire text-amber-400"></i> Hot Leads Only
+            </a>
+            <a href="/dashboard?filter=WARM" class="px-3.5 py-1.5 rounded-lg {{ 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' if filter_badge == 'WARM' else 'text-slate-400 hover:text-white' }}">
+                Warm Leads
+            </a>
+        </div>
+
+        <div class="text-xs text-slate-400">
+            Showing <strong class="text-white">{{ leads|length }}</strong> opportunities
+        </div>
+    </div>
+
+    <!-- Leads List -->
+    <div class="space-y-4">
+        {% if not leads %}
+        <div class="glass-card rounded-2xl p-12 text-center">
+            <div class="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 text-2xl mx-auto mb-4">
+                <i class="fa-solid fa-radar"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-1">No Leads Found in this View</h3>
+            <p class="text-xs text-slate-400 max-w-sm mx-auto mb-6">Click Scan Now or add new keywords to trigger live discovery.</p>
+            <form method="POST" action="/dashboard/scan-now">
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs">
+                    Scan New Leads Now
+                </button>
+            </form>
+        </div>
+        {% else %}
+        {% for lead in leads %}
+        <div class="glass-card rounded-2xl p-6 transition-all hover:border-emerald-500/40 relative">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                <div class="flex flex-wrap items-center gap-2 text-xs">
+                    <span class="px-2.5 py-1 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20 font-bold flex items-center gap-1.5">
+                        <i class="fa-brands fa-reddit"></i> r/{{ lead.subreddit }}
+                    </span>
+                    <span class="text-slate-400">by <strong class="text-slate-300">u/{{ lead.author }}</strong></span>
+                    <span class="text-slate-500">• {{ lead.created_at.strftime('%b %d, %H:%M') }}</span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-1 rounded-lg text-xs font-black flex items-center gap-1.5 {{ 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' if lead.intent_score >= 80 else 'bg-amber-500/15 text-amber-400 border border-amber-500/30' }}">
+                        <i class="fa-solid fa-bolt"></i> {{ lead.intent_score }}% BUYING INTENT
+                    </span>
+                    <span class="px-2 py-1 rounded-md text-[10px] font-bold uppercase bg-slate-800 text-slate-300">
+                        {{ lead.urgency_level }} Urgency
+                    </span>
+                </div>
+            </div>
+
+            <!-- Title & Content -->
+            <h3 class="text-lg font-bold text-white mb-2 leading-snug">{{ lead.title }}</h3>
+            <p class="text-xs text-slate-300 leading-relaxed mb-4 line-clamp-3">{{ lead.content }}</p>
+
+            <!-- Pain Point Pill -->
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-400 mb-5">
+                <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+                <span>Detected Core Pain: <strong class="text-slate-200">{{ lead.pain_point_summary }}</strong></span>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-4 text-xs">
+                    <a href="{{ lead.original_url }}" target="_blank" class="text-slate-400 hover:text-white flex items-center gap-1.5 font-semibold transition-colors">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> View Thread on Reddit
+                    </a>
+                    <span class="text-slate-500 flex items-center gap-1">
+                        <i class="fa-solid fa-chart-simple text-[10px] text-cyan-400"></i> {{ lead.tracked_clicks }} clicks on your link
+                    </span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button onclick="openReplyModal({{ lead.id }}, '{{ lead.author|escape }}', `{{ lead.suggested_reply|escape }}`)" 
+                            class="px-4 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500 text-emerald-400 hover:text-slate-950 border border-emerald-500/30 font-bold text-xs transition-all flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> 1-Click Stealth Reply
+                    </button>
+                    <button onclick="copyToClipboardDirect(`{{ lead.suggested_reply|escape }}`, {{ lead.id }})" 
+                            class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs transition-colors" title="Quick Copy">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal: Stealth Reply Inspector -->
+<div id="reply-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="glass-card max-w-2xl w-full rounded-2xl p-6 shadow-2xl border border-emerald-500/30 relative max-h-[90vh] flex flex-col">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-white">80/20 Stealth Reply Generator</h3>
+                    <p class="text-[11px] text-slate-400">Replying to <span id="modal-author" class="text-emerald-400 font-semibold"></span></p>
+                </div>
+            </div>
+            <button onclick="closeReplyModal()" class="text-slate-400 hover:text-white text-lg p-1">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="my-4 space-y-3 flex-grow overflow-y-auto">
+            <div class="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                <span><strong>Anti-Ban Formula:</strong> 80% genuine peer value + 20% natural SaaS recommendation with your tracked link.</span>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Reply Content (Customizable)</label>
+                <textarea id="modal-reply-text" rows="8" class="w-full p-4 bg-slate-950 border border-slate-700 rounded-xl text-slate-200 text-xs font-mono leading-relaxed focus:outline-none focus:border-emerald-500"></textarea>
+            </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-800 flex items-center justify-between gap-3">
+            <span class="text-[11px] text-slate-500">Tracked redirect link already embedded</span>
+            <div class="flex items-center gap-2">
+                <button onclick="closeReplyModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs">
+                    Cancel
+                </button>
+                <button onclick="copyModalReply()" class="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition-all shadow-lg shadow-emerald-500/25 flex items-center gap-1.5">
+                    <i class="fa-solid fa-copy"></i> Copy To Clipboard
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let activeLeadId = null;
+
+    function openReplyModal(leadId, author, text) {
+        activeLeadId = leadId;
+        document.getElementById('modal-author').innerText = 'u/' + author;
+        document.getElementById('modal-reply-text').value = text;
+        document.getElementById('reply-modal').classList.remove('hidden');
+    }
+
+    function closeReplyModal() {
+        document.getElementById('reply-modal').classList.add('hidden');
+    }
+
+    async function copyModalReply() {
+        const text = document.getElementById('modal-reply-text').value;
+        await navigator.clipboard.writeText(text);
+        showToast('Stealth reply copied to clipboard! Paste it on Reddit.', 'success');
+        
+        // Notify server to mark as replied
+        if (activeLeadId) {
+            fetch(`/dashboard/leads/${activeLeadId}/copied`, { method: 'POST' });
+        }
+        closeReplyModal();
+    }
+
+    async function copyToClipboardDirect(text, leadId) {
+        await navigator.clipboard.writeText(text);
+        showToast('Reply copied! Paste it in the Reddit thread.', 'success');
+        if (leadId) {
+            fetch(`/dashboard/leads/${leadId}/copied`, { method: 'POST' });
+        }
+    }
+</script>
+{% endblock %}

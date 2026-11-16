@@ -1,0 +1,94 @@
+{% extends "dashboard/layout.html" %}
+
+{% block title %}Keywords & Alerts — LeadRadar AI{% endblock %}
+
+{% block dashboard_content %}
+<div class="space-y-6 max-w-5xl">
+    <!-- Header -->
+    <div class="glass-card rounded-2xl p-6 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-slate-800">
+        <h1 class="text-2xl font-black text-white mb-1">Monitored Keywords & Triggers</h1>
+        <p class="text-xs text-slate-400">
+            LeadRadar AI monitors these terms 24/7 across Reddit and Twitter. When a user expresses buying intent, it triggers an instant alert.
+        </p>
+    </div>
+
+    <!-- Add Keyword Form -->
+    <div class="glass-card rounded-2xl p-6 border border-emerald-500/20">
+        <h2 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-plus-circle text-emerald-400"></i> Add New Monitored Keyword
+        </h2>
+
+        <form method="POST" action="/dashboard/keywords/add" class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Keyword / Problem Phrase</label>
+                <input type="text" name="keyword" placeholder="e.g. missed calls, video demo, lead gen..." required 
+                       class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 text-sm font-medium transition-colors">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Platform</label>
+                <select name="platform" class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white text-sm font-medium focus:outline-none focus:border-emerald-500">
+                    <option value="reddit">Reddit (Subreddits)</option>
+                    <option value="twitter">Twitter / X Stream</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Target Subreddit</label>
+                <input type="text" name="subreddit" value="SaaS" placeholder="SaaS, smallbusiness, startups..." 
+                       class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 text-sm font-medium transition-colors">
+            </div>
+
+            <div class="sm:col-span-4 flex justify-end">
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition-all shadow-md shadow-emerald-500/20 flex items-center gap-2">
+                    <i class="fa-solid fa-satellite-dish"></i> Add & Activate Radar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Existing Keywords List -->
+    <div class="glass-card rounded-2xl p-6">
+        <h2 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-list-check text-cyan-400"></i> Active Radar Streams ({{ keywords|length }})
+        </h2>
+
+        {% if not keywords %}
+        <div class="p-8 text-center text-slate-400 text-xs">
+            No keywords configured yet. Add your first phrase above to start monitoring!
+        </div>
+        {% else %}
+        <div class="divide-y divide-slate-800">
+            {% for kw in keywords %}
+            <div class="py-4 flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-slate-800 text-slate-200 flex items-center justify-center font-bold text-sm">
+                        {% if kw.platform == 'reddit' %}
+                        <i class="fa-brands fa-reddit text-orange-400"></i>
+                        {% else %}
+                        <i class="fa-brands fa-x-twitter text-slate-100"></i>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-white flex items-center gap-2">
+                            <span>{{ kw.keyword }}</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active</span>
+                        </div>
+                        <div class="text-xs text-slate-400">
+                            {{ kw.platform|capitalize }} • r/{{ kw.subreddit }} • Added {{ kw.created_at.strftime('%b %d') }}
+                        </div>
+                    </div>
+                </div>
+
+                <form method="POST" action="/dashboard/keywords/{{ kw.id }}/delete">
+                    <button type="submit" class="p-2 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors" title="Delete Keyword">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
