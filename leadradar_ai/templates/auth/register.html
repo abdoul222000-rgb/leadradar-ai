@@ -76,6 +76,37 @@
                     </div>
                 </div>
 
+                <!-- Connexion Compte Twitter / X pour l'Algorithme -->
+                <div class="pt-3 border-t border-slate-800">
+                    <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-200 mb-1 flex items-center justify-between">
+                        <span><i class="fa-brands fa-x-twitter mr-1 text-white"></i> Connexion Compte X / Twitter (Pour l'Algorithme)</span>
+                        <span class="text-[9px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-bold">100% Sécurisé</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mb-3">
+                        Permet à l'algorithme d'explorer et de surveiller les tweets et discussions X en direct selon vos mots-clés.
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Pseudo Twitter / X</label>
+                            <div class="relative">
+                                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs">@</span>
+                                <input type="text" name="twitter_username" placeholder="votre_compte" 
+                                       class="w-full pl-8 pr-4 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-slate-500 text-sm font-medium transition-colors">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Mot de passe / Clé X</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                                <input type="password" name="twitter_password" placeholder="••••••••••••" 
+                                       class="w-full pl-9 pr-4 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-slate-500 text-sm font-medium transition-colors">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Votre SaaS ou Boutique (Champs Libres et Vides) -->
                 <div class="pt-3 border-t border-slate-800">
                     <div class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-400 mb-3">
                         <i class="fa-solid fa-rocket mr-1"></i> Votre SaaS ou Boutique (Pour les Réponses Furtives 80/20)
@@ -85,20 +116,20 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Nom du Produit / SaaS / Boutique</label>
-                                <input type="text" name="product_name" value="CallCatch AI" placeholder="e.g. CallCatch AI" required 
-                                       class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 text-sm font-medium transition-colors">
+                                <input type="text" name="product_name" value="" placeholder="ex: Mon SaaS, Ma Boutique, Mon Outil..." required 
+                                       class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm font-medium transition-colors">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Site Web / Lien de la Boutique</label>
-                                <input type="url" name="product_url" value="https://callcatch.ai" placeholder="https://yoursaas.com" required 
-                                       class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 text-sm font-medium transition-colors">
+                                <input type="url" name="product_url" value="" placeholder="https://monsite.com" required 
+                                       class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm font-medium transition-colors">
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Phrase Clé de Valeur (Pitch en 1 phrase)</label>
-                            <textarea name="product_pitch" rows="2" required 
-                                      class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 text-sm font-medium transition-colors">Capture les appels manqués des artisans et envoie un SMS automatique en 8 secondes pour ne plus perdre de clients.</textarea>
+                            <textarea name="product_pitch" rows="2" placeholder="Expliquez en 1 phrase le problème exact que résout votre produit ou boutique..." required 
+                                      class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm font-medium transition-colors"></textarea>
                             <p class="text-[11px] text-slate-500 mt-1">L'IA intégrera naturellement votre produit dans chaque réponse comme la solution au problème.</p>
                         </div>
                     </div>

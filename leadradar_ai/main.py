@@ -236,6 +236,8 @@ def register_submit(
     product_pitch: str = Form(...),
     reddit_username: Optional[str] = Form(""),
     reddit_password: Optional[str] = Form(""),
+    twitter_username: Optional[str] = Form(""),
+    twitter_password: Optional[str] = Form(""),
     db: Session = Depends(get_db)
 ):
     clean_email = email.strip().lower()
@@ -254,6 +256,7 @@ def register_submit(
             context={"error": "Le mot de passe doit comporter au moins 6 caractères."}
         )
 
+    clean_tw_user = twitter_username.strip().replace("@", "") if twitter_username else ""
     user = User(
         email=clean_email,
         password_hash=hash_password(password),
@@ -262,6 +265,9 @@ def register_submit(
         product_pitch=product_pitch.strip(),
         reddit_username=reddit_username.strip().replace("u/", "") if reddit_username else "",
         reddit_password=reddit_password.strip() if reddit_password else "",
+        twitter_username=clean_tw_user,
+        twitter_handle=clean_tw_user,
+        twitter_password=twitter_password.strip() if twitter_password else "",
         plan="FREE"
     )
     db.add(user)
