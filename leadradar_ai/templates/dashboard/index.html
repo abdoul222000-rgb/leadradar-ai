@@ -123,14 +123,25 @@
                 </div>
             </div>
 
-            <!-- Title & Content -->
-            <h3 class="text-lg font-bold text-white mb-2 leading-snug">{{ lead.title }}</h3>
-            <p class="text-xs text-slate-300 leading-relaxed mb-4 line-clamp-3">{{ lead.content }}</p>
+            <!-- Title & Content (Le Problème Exact Détecté sur Reddit/X) -->
+            <div class="mb-3">
+                <h3 class="text-lg font-bold text-white mb-2 leading-snug hover:text-emerald-300 transition-colors">
+                    {{ lead.title }}
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed bg-slate-950/60 p-3.5 rounded-xl border border-slate-800/80 mb-3">
+                    {{ lead.content }}
+                </p>
+            </div>
 
-            <!-- Pain Point Pill -->
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-400 mb-5">
-                <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
-                <span>Detected Core Pain: <strong class="text-slate-200">{{ lead.pain_point_summary }}</strong></span>
+            <!-- Problème / Besoin Urgent Détecté -->
+            <div class="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-xs text-amber-200 mb-5 flex items-start gap-2.5">
+                <i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm mt-0.5 shrink-0"></i>
+                <div>
+                    <span class="text-amber-400 font-extrabold uppercase tracking-wider text-[10px] block mb-0.5">
+                        Besoin Urgent Détecté :
+                    </span>
+                    <span class="text-slate-200 font-medium">{{ lead.pain_point_summary }}</span>
+                </div>
             </div>
 
             <!-- Action Bar -->

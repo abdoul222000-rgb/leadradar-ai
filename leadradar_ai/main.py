@@ -52,19 +52,19 @@ def ensure_master_founder():
             db.refresh(founder)
 
             default_keywords = [
-                ("missed calls", "reddit", "smallbusiness"),
-                ("contractor leads", "reddit", "Roofing"),
-                ("facebook ads burning money", "reddit", "SaaS"),
-                ("url to video demo", "reddit", "Entrepreneur"),
+                ("missed calls", "reddit", "Plumbing"),
+                ("contractor calls", "reddit", "Roofing"),
+                ("emergency calls", "reddit", "smallbusiness"),
             ]
             for kw, plat, sub in default_keywords:
                 db.add(KeywordAlert(user_id=founder.id, keyword=kw, platform=plat, subreddit=sub))
             db.commit()
 
-            LeadScannerService.seed_user_starter_leads(
+            LeadScannerService.seed_user_leads_from_keywords(
                 user_id=founder.id,
                 product_name=founder.product_name,
                 product_pitch=founder.product_pitch,
+                keywords=["missed calls", "contractor calls", "emergency calls"],
                 db_session=db
             )
     finally:
@@ -264,16 +264,17 @@ def register_submit(
     db.commit()
     db.refresh(user)
 
-    # Initialiser 2 mots-clés par défaut
-    db.add(KeywordAlert(user_id=user.id, keyword="recommend tool", platform="reddit", subreddit="SaaS"))
-    db.add(KeywordAlert(user_id=user.id, keyword="alternative to", platform="reddit", subreddit="smallbusiness"))
+    # Initialiser les mots-clés de base selon le produit
+    default_kw = "missed calls" if "call" in product_name.lower() or "call" in product_pitch.lower() else "recommend tool"
+    db.add(KeywordAlert(user_id=user.id, keyword=default_kw, platform="reddit", subreddit="smallbusiness"))
     db.commit()
 
-    # Seeder 5 leads haute intention personnalisés
-    LeadScannerService.seed_user_starter_leads(
+    # Seeder des leads 100% ciblés sur ses mots-clés sans aucun doublon
+    LeadScannerService.seed_user_leads_from_keywords(
         user_id=user.id,
         product_name=user.product_name,
         product_pitch=user.product_pitch,
+        keywords=[default_kw],
         db_session=db
     )
 
@@ -340,16 +341,18 @@ def dashboard_scan_now(
     user: User = Depends(get_current_user_required),
     db: Session = Depends(get_db)
 ):
-    """Déclenche un scan manuel immédiat et ajoute de nouvelles opportunités"""
-    # Récupérer les mots-clés de l'utilisateur
+    """Déclenche un scan manuel STRICTEMENT basé sur les mots-clés de l'utilisateur (Zéro Doublon)"""
     keywords = db.query(KeywordAlert).filter(KeywordAlert.user_id == user.id, KeywordAlert.is_active == True).all()
-    kw_terms = [k.keyword for k in keywords] or ["missed calls", "facebook ads"]
+    kw_terms = [k.keyword for k in keywords] or ["missed calls"]
 
-    for kw in kw_terms[:2]:
+    for kw in kw_terms:
         results = LeadScannerService.scan_for_keyword(kw, limit=2)
         for r in results:
-            # Vérifier si déjà présent
-            existing = db.query(Lead).filter(Lead.user_id == user.id, Lead.external_id == r["external_id"]).first()
+            # Vérification anti-doublon absolue (titre OU ID externe)
+            existing = db.query(Lead).filter(
+                Lead.user_id == user.id, 
+                (Lead.title == r["title"]) | (Lead.external_id == r["external_id"])
+            ).first()
             if not existing:
                 new_lead = Lead(
                     user_id=user.id,
@@ -437,36 +440,41 @@ def add_keyword_submit(
     db.add(alert)
     db.commit()
 
-    # Lancer un scan rapide sur ce nouveau mot-clé
-    results = LeadScannerService.scan_for_keyword(keyword, limit=2)
+    # Lancer un scan rapide et ciblé sur ce nouveau mot-clé (sans doublon)
+    results = LeadScannerService.scan_for_keyword(keyword, limit=3)
     for r in results:
-        new_lead = Lead(
-            user_id=user.id,
-            platform=r["platform"],
-            subreddit=r["subreddit"],
-            external_id=r["external_id"],
-            title=r["title"],
-            content=r["content"],
-            author=r["author"],
-            original_url=r["original_url"],
-            intent_score=r["intent_score"],
-            intent_badge=r["intent_badge"],
-            urgency_level=r["urgency_level"],
-            pain_point_summary=r["pain_summary"],
-            suggested_reply="",
-            status="NEW"
-        )
-        db.add(new_lead)
-        db.flush()
-        tracked_link = f"{settings.BASE_URL}/r/{new_lead.id}"
-        new_lead.suggested_reply = AIIntentEngine.generate_stealth_reply(
-            author=r["author"],
-            post_title=r["title"],
-            post_content=r["content"],
-            product_name=user.product_name,
-            product_pitch=user.product_pitch,
-            redirect_url=tracked_link
-        )
+        existing = db.query(Lead).filter(
+            Lead.user_id == user.id,
+            (Lead.title == r["title"]) | (Lead.external_id == r["external_id"])
+        ).first()
+        if not existing:
+            new_lead = Lead(
+                user_id=user.id,
+                platform=r["platform"],
+                subreddit=r["subreddit"],
+                external_id=r["external_id"],
+                title=r["title"],
+                content=r["content"],
+                author=r["author"],
+                original_url=r["original_url"],
+                intent_score=r["intent_score"],
+                intent_badge=r["intent_badge"],
+                urgency_level=r["urgency_level"],
+                pain_point_summary=r["pain_summary"],
+                suggested_reply="",
+                status="NEW"
+            )
+            db.add(new_lead)
+            db.flush()
+            tracked_link = f"{settings.BASE_URL}/r/{new_lead.id}"
+            new_lead.suggested_reply = AIIntentEngine.generate_stealth_reply(
+                author=r["author"],
+                post_title=r["title"],
+                post_content=r["content"],
+                product_name=user.product_name,
+                product_pitch=user.product_pitch,
+                redirect_url=tracked_link
+            )
     db.commit()
 
     return RedirectResponse(url="/dashboard/keywords", status_code=status.HTTP_303_SEE_OTHER)
