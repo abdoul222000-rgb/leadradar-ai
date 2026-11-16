@@ -1,6 +1,7 @@
 import random
 import time
 import hashlib
+import urllib.parse
 from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional
 from .ai_intent_engine import AIIntentEngine
@@ -161,6 +162,9 @@ class LeadScannerService:
         analysis = AIIntentEngine.calculate_intent(title, content)
         unique_id = hashlib.md5(f"{kw}_{title}_{int(time.time())}".encode('utf-8')).hexdigest()[:12]
 
+        query_encoded = urllib.parse.quote_plus(kw)
+        live_reddit_url = f"https://www.reddit.com/r/{subreddit}/search/?q={query_encoded}&restrict_sr=1&sort=new"
+
         return {
             "platform": platform,
             "subreddit": subreddit,
@@ -168,7 +172,7 @@ class LeadScannerService:
             "title": title,
             "content": content,
             "author": author,
-            "original_url": f"https://www.reddit.com/r/{subreddit}/comments/{unique_id}/{kw_clean.replace(' ', '_')}/",
+            "original_url": live_reddit_url,
             "matched_keyword": kw,
             "intent_score": analysis["score"],
             "intent_badge": analysis["badge"],
@@ -189,8 +193,10 @@ class LeadScannerService:
 
         if niche:
             # Récupérer les posts experts de cette niche
+            query_encoded = urllib.parse.quote_plus(keyword)
             for post in niche["posts"]:
                 unique_hash = hashlib.md5(f"{post['title']}".encode('utf-8')).hexdigest()[:10]
+                live_reddit_url = f"https://www.reddit.com/r/{post['subreddit']}/search/?q={query_encoded}&restrict_sr=1&sort=new"
                 results.append({
                     "platform": "reddit",
                     "subreddit": post["subreddit"],
@@ -198,7 +204,7 @@ class LeadScannerService:
                     "title": post["title"],
                     "content": post["content"],
                     "author": post["author"],
-                    "original_url": f"https://www.reddit.com/r/{post['subreddit']}/comments/{unique_hash}/",
+                    "original_url": live_reddit_url,
                     "matched_keyword": keyword,
                     "intent_score": post["intent_score"],
                     "intent_badge": "HOT" if post["intent_score"] >= 80 else "WARM",

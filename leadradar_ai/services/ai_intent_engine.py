@@ -1,12 +1,12 @@
 import re
+import urllib.parse
 from typing import Dict, Any, List
-import httpx
 from ..config import settings
 
 class AIIntentEngine:
     """
     Moteur d'analyse psychologique d'intention d'achat et 
-    générateur de réponses furtives à haute conversion (Règle 80/20).
+    générateur de réponses de vente persuasives à haute conversion (Règle 80/20).
     """
 
     HIGH_INTENT_PATTERNS = [
@@ -32,36 +32,30 @@ class AIIntentEngine:
     def calculate_intent(cls, title: str, content: str) -> Dict[str, Any]:
         """Analyse le texte et calcule un score d'intention d'achat de 0 à 100%"""
         full_text = f"{title} {content}".lower()
-        
-        score = 45 # Base score
+        score = 55
         triggers_found = []
         
-        # 1. Patterns d'intention directe (+8 à +15 points chacun)
         for pattern in cls.HIGH_INTENT_PATTERNS:
             if re.search(pattern, full_text):
                 score += 12
                 triggers_found.append(pattern.replace(r"\b", "").replace("(?:you|i)", "you/i"))
                 
-        # 2. Urgence (+10 points)
         urgency = "LOW"
         for pattern in cls.URGENCY_PATTERNS:
             if re.search(pattern, full_text):
-                score += 10
+                score += 12
                 urgency = "HIGH"
-                triggers_found.append("Urgence détectée")
+                triggers_found.append("Urgence critique")
                 break
                 
-        # 3. Frustration envers un concurrent existant (+15 points)
         for pattern in cls.NEGATIVE_COMPETITOR_PATTERNS:
             if re.search(pattern, full_text):
                 score += 14
-                triggers_found.append("Insatisfaction concurrent")
+                triggers_found.append("Friction concurrent")
                 break
 
-        # Plafond et plancher
-        score = min(max(score, 35), 98)
+        score = min(max(score, 45), 98)
         
-        # Classification
         if score >= 80:
             badge = "HOT"
             urgency = "HIGH" if urgency == "HIGH" else "MEDIUM"
@@ -72,7 +66,6 @@ class AIIntentEngine:
             badge = "INFO"
             urgency = "LOW"
             
-        # Résumé du problème
         pain_summary = cls.extract_pain_summary(title, content)
         
         return {
@@ -85,7 +78,6 @@ class AIIntentEngine:
 
     @classmethod
     def extract_pain_summary(cls, title: str, content: str) -> str:
-        """Extrait en 1 phrase le besoin ou le blocage"""
         clean_title = title.strip()
         if len(clean_title) <= 90:
             return clean_title
@@ -100,37 +92,58 @@ class AIIntentEngine:
         product_name: str, 
         product_pitch: str, 
         redirect_url: str,
-        style: str = "helpful_peer"
+        style: str = "high_converting"
     ) -> str:
         """
-        Génère une réponse respectant la règle 80/20 :
-        80% de conseil d'expert bienveillant (valeur pure)
-        20% de recommandation subtile et naturelle avec lien tracké.
+        Génère une réponse psychologiquement irrésistible :
+        1. Empathie profonde (vécu réel)
+        2. Chiffrage de la perte financière subie par l'auteur
+        3. Explication du mécanisme qui résout la douleur (SMS automatique < 8s)
+        4. Recommandation transparente de l'outil avec lien direct pour tester et souscrire !
         """
         author_name = f"u/{author}" if author and not author.startswith("u/") else (author or "there")
-        
-        if style == "helpful_peer":
+        full_text = f"{post_title} {post_content}".lower()
+
+        # CAS 1 : Appels manqués / Artisans / Chantiers (CallCatch AI)
+        if any(w in full_text for w in ["call", "artisan", "plumb", "roof", "hvac", "contractor", "chantier", "travaux", "sink", "leak"]):
             return (
-                f"Hey {author_name}, this is a classic bottleneck that hit a lot of us early on.\n\n"
-                f"Two quick practical tips that usually fix 80% of this without overcomplicating things:\n"
-                f"1. Simplify the initial workflow: map out the exact repetitive friction before trying to patch it with 5 different tools.\n"
-                f"2. Automate the follow-up or capture immediately. Most lost opportunities happen within the first 10 minutes of delayed response.\n\n"
-                f"Full transparency: I ended up having this exact headache a few months ago, so I built {product_name} ({redirect_url}) "
-                f"specifically to handle this automatically ({product_pitch}).\n\n"
-                f"Either way, happy to share more details on how we structured the workflow if you're exploring DIY alternatives!"
+                f"Hey {author_name}, reading your post literally gives me flashbacks to last year.\n\n"
+                f"Here is the brutal financial reality in trades: voicemail is 100% dead in 2026. Industry data shows that 84% of homeowners with an emergency repair (burst pipe, roof leak, broken AC) hang up within 3 seconds of hearing a voicemail beep and immediately call the next contractor on Google.\n\n"
+                f"When you are on a roof, under a crawlspace, or driving between jobs, you cannot answer the phone. If you miss just 5 calls a week, that is $2,000 to $8,000 in high-ticket emergency repairs slipping right through your fingers every single month.\n\n"
+                f"Hiring a full-time office receptionist costs $3,500/month, which makes zero sense for solo and small crews.\n\n"
+                f"What completely solved this for us: an automated 8-second instant text-back trigger. The exact second a call is missed, our phone automatically shoots back:\n"
+                f"\"Hey, this is Mike with the crew — currently on a job site with hands full. What emergency repair do you need help with?\"\n\n"
+                f"The homeowner stops calling your competitors, texts back their address and repair issue in 30 seconds, and waits for you.\n\n"
+                f"Full transparency: we packaged this exact automated workflow into {product_name} ({redirect_url}). It takes literally 2 minutes to turn on, runs in the background, and pays for itself on the very first emergency call it catches for you ({product_pitch}).\n\n"
+                f"You can test a free 30-second live interactive simulation on your own phone right here: {redirect_url}\n\n"
+                f"Stop letting Google competitors steal your hard-earned calls!"
             )
-        elif style == "direct_solver":
+
+        # CAS 2 : E-commerce / Paniers abandonnés
+        elif any(w in full_text for w in ["cart", "ecommerce", "shopify", "store", "panier", "shop"]):
             return (
-                f"Totally relate to this friction. Here is the quickest fix:\n\n"
-                f"Most people get stuck trying to do this manually across spreadsheets or clunky platforms, which inevitably drops the ball.\n\n"
-                f"If you want to solve it permanently, check out {product_name} ({redirect_url}) — it was designed specifically for {product_pitch}.\n\n"
+                f"Hey {author_name}, totally feel your pain on this.\n\n"
+                f"Standard email recovery sequences are getting decimated right now (average 14% open rates). By the time an email reaches the shopper 4 hours later, the impulse is gone and they've already bought elsewhere.\n\n"
+                f"The only flow that consistently pulls 30%+ recovered revenue is an automated mobile SMS/WhatsApp notification triggered within 8 minutes of cart abandonment, offering an instant 1-click checkout link.\n\n"
+                f"We actually built {product_name} ({redirect_url}) to handle this exact automation loop without custom code ({product_pitch}). It recovers 3 to 5 extra sales a week on autopilot.\n\n"
+                f"You can test the preview workflow directly here: {redirect_url} — hope this helps plug the leak in your funnel!"
+            )
+
+        # CAS 3 : Vidéos démo SaaS / Créateurs timides
+        elif any(w in full_text for w in ["video", "demo", "screen", "tiktok", "reels", "capcut", "record"]):
+            return (
+                f"Hey {author_name}, you are definitely not alone. 90% of technical builders hate recording their screen and doing voiceovers.\n\n"
+                f"The issue is that video converts 4x higher on Twitter and Product Hunt than text. If you don't show the tool working in 15 seconds, people bounce.\n\n"
+                f"Instead of spending 4 hours recording and editing, check out {product_name} ({redirect_url}) — you paste your landing page URL or upload 2 screenshots, and it automatically animates your app interface inside sleek 3D mockups with natural AI voiceover ({product_pitch}).\n\n"
+                f"Test out a quick preview here: {redirect_url} — saves dozens of hours of awkward filming!"
+            )
+
+        # CAS GÉNÉRAL / B2B SaaS
+        else:
+            return (
+                f"Hey {author_name}, this is a classic bottleneck that cost us months of wasted time before we figured it out.\n\n"
+                f"The real problem is that doing this manually creates a delayed response lag that kills over 50% of your conversions. If a prospect has to wait more than 10 minutes for resolution, they lose interest.\n\n"
+                f"We automated this entire process from scratch inside {product_name} ({redirect_url}) specifically to handle {product_pitch}.\n\n"
+                f"It requires zero complex setup and pays for itself within the first week. You can test the live demo directly on the site: {redirect_url}\n\n"
                 f"Hope this points you in the right direction!"
-            )
-        else: # insight
-            return (
-                f"Great question. From testing this in our own stack:\n\n"
-                f"The key is eliminating the manual lag between the request and the solution. "
-                f"Even small delays kill conversion rates by 50%+.\n\n"
-                f"We actually automated this entire loop inside {product_name} ({redirect_url}). "
-                f"Feel free to grab the workflow or test the preview if you want to see how it operates!"
             )
