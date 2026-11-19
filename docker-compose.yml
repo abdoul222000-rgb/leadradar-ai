@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  leadradar:
+    build: .
+    container_name: leadradar_ai
+    restart: always
+    ports:
+      - "8070:8070"
+    environment:
+      - PORT=8070
+      - BASE_URL=https://leadradar-ai.onrender.com
+      - LEADRADAR_DATABASE_URL=sqlite:///./leadradar.db
+    volumes:
+      - ./leadradar.db:/app/leadradar.db
