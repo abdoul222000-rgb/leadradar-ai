@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from sqlalchemy import create_engine, Column, Integer, String, Text, Float, Boolean, DateTime, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Text, Float, Boolean, DateTime, ForeignKey, text
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 from .config import settings
 
@@ -30,6 +30,12 @@ class User(Base):
     twitter_handle = Column(String(255), nullable=True, default="")
     twitter_username = Column(String(255), nullable=True, default="")
     twitter_password = Column(String(255), nullable=True, default="")
+    
+    # Mode Croissance LeadRadar (Option 2 - Dogfooding)
+    growth_mode = Column(Boolean, default=False)
+    saved_product_name = Column(String(255), nullable=True, default="")
+    saved_product_url = Column(String(500), nullable=True, default="")
+    saved_product_pitch = Column(Text, nullable=True, default="")
     
     # Plans: 'FREE' (limit 5 leads), 'STARTER' ($29/mo), 'GROWTH' ($69/mo)
     plan = Column(String(50), default="FREE")
@@ -126,3 +132,21 @@ def get_db():
 
 def init_db():
     Base.metadata.create_all(bind=engine)
+    # Migration douce pour les colonnes dynamiques
+    with engine.connect() as conn:
+        for col_name, col_type in [
+            ("reddit_username", "VARCHAR(255) DEFAULT ''"),
+            ("reddit_password", "VARCHAR(255) DEFAULT ''"),
+            ("twitter_handle", "VARCHAR(255) DEFAULT ''"),
+            ("twitter_username", "VARCHAR(255) DEFAULT ''"),
+            ("twitter_password", "VARCHAR(255) DEFAULT ''"),
+            ("growth_mode", "BOOLEAN DEFAULT 0"),
+            ("saved_product_name", "VARCHAR(255) DEFAULT ''"),
+            ("saved_product_url", "VARCHAR(500) DEFAULT ''"),
+            ("saved_product_pitch", "TEXT DEFAULT ''"),
+        ]:
+            try:
+                conn.execute(text(f"ALTER TABLE users ADD COLUMN {col_name} {col_type}"))
+                conn.commit()
+            except Exception:
+                pass

@@ -396,6 +396,70 @@ def dashboard_scan_now(
     db.commit()
     return RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
 
+@app.post("/dashboard/activate-leadradar-growth")
+def activate_leadradar_growth(
+    user: User = Depends(get_current_user_required),
+    db: Session = Depends(get_db)
+):
+    """
+    OPTION 2 (DOGFOODING ENGINE) :
+    Bascule le dashboard en mode acquisition pour trouver les 10 premiers clients payants de LeadRadar AI !
+    """
+    if not user.growth_mode:
+        # Sauvegarder les paramètres du produit actuel pour pouvoir y revenir
+        user.saved_product_name = user.product_name or "My Product"
+        user.saved_product_url = user.product_url or "https://example.com"
+        user.saved_product_pitch = user.product_pitch or "Automated tool"
+    
+    user.growth_mode = True
+    user.product_name = "LeadRadar AI"
+    user.product_url = settings.BASE_URL if "render" in settings.BASE_URL else "https://leadradar-ai.onrender.com"
+    user.product_pitch = "The #1 Zero-Ad Reddit & X Lead Engine: Finds warm B2B buyers asking for your software in real time."
+    
+    # Ajouter les mots-clés stratégiques d'acquisition SaaS
+    growth_keywords = [
+        ("first 10 customers", "reddit", "SaaS"),
+        ("early saas users", "reddit", "Entrepreneur"),
+        ("find b2b clients", "reddit", "startups"),
+        ("get clients without ads", "reddit", "SaaS"),
+    ]
+    for kw, plat, sub in growth_keywords:
+        existing_kw = db.query(KeywordAlert).filter(
+            KeywordAlert.user_id == user.id,
+            KeywordAlert.keyword == kw
+        ).first()
+        if not existing_kw:
+            db.add(KeywordAlert(user_id=user.id, keyword=kw, platform=plat, subreddit=sub))
+    
+    db.commit()
+
+    # Seeder immédiatement des leads de fondateurs cherchant des clients
+    LeadScannerService.seed_user_leads_from_keywords(
+        user_id=user.id,
+        product_name=user.product_name,
+        product_pitch=user.product_pitch,
+        keywords=["first 10 customers", "early saas users", "find b2b clients", "get clients without ads"],
+        db_session=db
+    )
+
+    return RedirectResponse(url="/dashboard?growth=active", status_code=status.HTTP_303_SEE_OTHER)
+
+@app.post("/dashboard/deactivate-leadradar-growth")
+def deactivate_leadradar_growth(
+    user: User = Depends(get_current_user_required),
+    db: Session = Depends(get_db)
+):
+    """Restaure le produit personnalisé initial de l'utilisateur"""
+    user.growth_mode = False
+    if user.saved_product_name:
+        user.product_name = user.saved_product_name
+    if user.saved_product_url:
+        user.product_url = user.saved_product_url
+    if user.saved_product_pitch:
+        user.product_pitch = user.saved_product_pitch
+    db.commit()
+    return RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
+
 @app.post("/dashboard/leads/{lead_id}/copied")
 def mark_lead_copied(
     lead_id: int,

@@ -45,6 +45,24 @@
                 </button>
             </div>
         </form>
+
+        <div class="mt-4 pt-4 border-t border-slate-800/80">
+            <span class="text-xs text-slate-400 font-bold block mb-2">⚡ Suggestions Rapides / Pack Option 2 (Trouver des clients SaaS pour LeadRadar) :</span>
+            <div class="flex flex-wrap gap-2">
+                <button type="button" onclick="fillKeyword('first 10 customers', 'reddit', 'SaaS')" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 hover:border-amber-500/50 text-[11px] text-slate-300 hover:text-white transition-colors">
+                    + first 10 customers (r/SaaS)
+                </button>
+                <button type="button" onclick="fillKeyword('early saas users', 'reddit', 'Entrepreneur')" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 hover:border-amber-500/50 text-[11px] text-slate-300 hover:text-white transition-colors">
+                    + early saas users (r/Entrepreneur)
+                </button>
+                <button type="button" onclick="fillKeyword('find b2b clients', 'reddit', 'startups')" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 hover:border-amber-500/50 text-[11px] text-slate-300 hover:text-white transition-colors">
+                    + find b2b clients (r/startups)
+                </button>
+                <button type="button" onclick="fillKeyword('get clients without ads', 'reddit', 'SaaS')" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 hover:border-amber-500/50 text-[11px] text-slate-300 hover:text-white transition-colors">
+                    + get clients without ads (r/SaaS)
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Existing Keywords List -->
@@ -91,4 +109,15 @@
         {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function fillKeyword(kw, plat, sub) {
+        document.querySelector('input[name="keyword"]').value = kw;
+        document.querySelector('select[name="platform"]').value = plat;
+        document.querySelector('input[name="subreddit"]').value = sub;
+        document.querySelector('input[name="keyword"]').focus();
+    }
+</script>
 {% endblock %}

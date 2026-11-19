@@ -9,6 +9,53 @@ from ..config import settings
 
 # Base de connaissances experte de problèmes réels Reddit & X classés par intention d'achat
 NICHE_BUYER_PAINS = {
+    "leadradar_growth": {
+        "keywords": [
+            "first 10 customers", "early saas users", "find b2b clients", "zero ad leads", 
+            "saas marketing", "get clients without ads", "reddit leads", "find customers reddit", 
+            "b2b clients", "trouver clients saas", "saas clients", "lead engine", "how to get saas customers",
+            "cold email dead", "early adopters", "indie hacker clients"
+        ],
+        "subreddits": ["SaaS", "Entrepreneur", "startups", "IndieHackers"],
+        "posts": [
+            {
+                "title": "Spent 4 months coding my B2B SaaS, launched on Product Hunt and got 0 paying users. How do founders get their first 10 paying customers without burning $2,000 on Facebook ads?",
+                "content": "I'm a solo software developer. I built a workflow tool for marketing agencies. When I launched, I got 20 upvotes and zero conversions. Tried running Meta ads, burnt through $600 with zero sales. I see other founders hitting $2k-$5k MRR by engaging directly on social media. Where do you find warm leads who are actually asking for solutions right now?",
+                "author": "solo_founder_kevin",
+                "subreddit": "SaaS",
+                "pain": "Stuck at 0 MRR after 4 months coding; burnt $600 on Meta ads; needs organic zero-ad method to find warm leads",
+                "intent_score": 96,
+                "urgency": "HIGH"
+            },
+            {
+                "title": "Facebook and Google ads are completely bleeding my startup budget ($1,500 gone with zero ROI). Is there a tool that scans Reddit and Twitter for people actively looking for software?",
+                "content": "Ad costs have exploded this year. Paying $4 per click to get tire-kickers who bounce in 5 seconds is suicide for a bootstrapped SaaS. I know people ask for tool recommendations on Reddit every single day (e.g. 'what software do you use for X?'). Is there any app or tool that monitors these discussions 24/7 so I can pitch my product right when they ask?",
+                "author": "alex_builds_apps",
+                "subreddit": "Entrepreneur",
+                "pain": "High CAC on Facebook ads; actively searching for software that monitors Reddit & X for buyer intent",
+                "intent_score": 97,
+                "urgency": "HIGH"
+            },
+            {
+                "title": "Cold emailing has a 0.5% reply rate in 2026. How are solo founders finding their first 10-20 B2B clients organically?",
+                "content": "I bought Apollo, scraped 2,000 emails, set up custom domains, and sent personalized cold sequences. Result: 3 replies, 0 sales, and 2 spam complaints. Cold outbound feels completely dead. Where do real founders find early paying adopters who actually have the urgent pain point right now?",
+                "author": "marcus_saas_lab",
+                "subreddit": "startups",
+                "pain": "Cold email has 0.5% response rate; urgently seeking organic acquisition for first 10-20 paying B2B customers",
+                "intent_score": 94,
+                "urgency": "HIGH"
+            },
+            {
+                "title": "How do you find prospective clients on Reddit without sounding like a spam bot and getting banned by mods?",
+                "content": "I know my target audience hangs out on subreddits like r/smallbusiness and r/webdev. But whenever I try to mention my product, moderators remove the post or ban my account for self-promotion. Is there a proven formula or tool that crafts genuine, value-first replies that don't get banned and actually bring qualified buyers?",
+                "author": "indie_sarah_code",
+                "subreddit": "SaaS",
+                "pain": "Gets banned by Reddit mods for self-promotion; needs 80/20 anti-ban stealth reply formula to convert users",
+                "intent_score": 95,
+                "urgency": "HIGH"
+            }
+        ]
+    },
     "missed_calls": {
         "keywords": ["missed calls", "missed call", "phone calls", "voicemail", "appels manqués", "contractor calls", "phone receptionist", "emergency calls", "call catcher"],
         "subreddits": ["smallbusiness", "Plumbing", "Roofing", "HVAC", "contractor"],

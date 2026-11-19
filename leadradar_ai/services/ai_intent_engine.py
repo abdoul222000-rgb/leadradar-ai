@@ -104,8 +104,26 @@ class AIIntentEngine:
         author_name = f"u/{author}" if author and not author.startswith("u/") else (author or "there")
         full_text = f"{post_title} {post_content}".lower()
 
-        # CAS 1 : Appels manqués / Artisans / Chantiers (CallCatch AI)
-        if any(w in full_text for w in ["call", "artisan", "plumb", "roof", "hvac", "contractor", "chantier", "travaux", "sink", "leak"]):
+        # CAS 1 : Croissance SaaS / 10 Premiers Clients / Prospection Reddit & X (LeadRadar AI Dogfooding)
+        if "leadradar" in product_name.lower() or any(w in full_text for w in [
+            "first 10 customers", "early saas", "find b2b", "ad spend", "facebook ads", 
+            "meta ads", "cold email", "saas marketing", "get clients", "zero ad", 
+            "reddit leads", "trouver clients", "warm leads", "zero roi", "apollo"
+        ]):
+            return (
+                f"Hey {author_name}, reading your post literally feels like looking into a mirror from when we first launched.\n\n"
+                f"Here is the brutal math for solo bootstrapped founders in 2026: cold outbound and paid ads are a financial bloodbath. Cold email reply rates have collapsed under 1% due to strict Google/Yahoo spam filters, and Meta/Google ads cost $40 to $90+ just to acquire a single free-trial user who churns in 4 days.\n\n"
+                f"The solo founders quietly hitting $3k to $10k MRR without ad budgets don't run paid campaigns. They use intent-driven social listening:\n"
+                f"Every single day on Reddit and X, hundreds of founders, freelancers, and businesses literally type: 'Is there a tool for X?', 'Tired of doing Y manually', or 'What software do you recommend for Z?'.\n\n"
+                f"When you reply to those specific people within 15 minutes with 80% genuine peer help and 20% transparent tool recommendation, your conversion rate is typically 30%+ because you are solving an active, burning pain right when they feel it.\n\n"
+                f"Doing this manually takes 4 hours of doom-scrolling, so we built {product_name} ({redirect_url}) to completely automate the pipeline ({product_pitch}).\n\n"
+                f"It continuously listens to Reddit and Twitter, flags posts with 80%+ buying intent, and drafts anti-ban stealth replies with your tracked link ready in 1 click.\n\n"
+                f"You can test a live simulation on your own SaaS keywords right here: {redirect_url}\n\n"
+                f"Stop burning cash on Mark Zuckerberg's ad engine and go where buyers are already asking for your solution!"
+            )
+
+        # CAS 2 : Appels manqués / Artisans / Chantiers (CallCatch AI)
+        elif any(w in full_text for w in ["call", "artisan", "plumb", "roof", "hvac", "contractor", "chantier", "travaux", "sink", "leak"]):
             return (
                 f"Hey {author_name}, reading your post literally gives me flashbacks to last year.\n\n"
                 f"Here is the brutal financial reality in trades: voicemail is 100% dead in 2026. Industry data shows that 84% of homeowners with an emergency repair (burst pipe, roof leak, broken AC) hang up within 3 seconds of hearing a voicemail beep and immediately call the next contractor on Google.\n\n"
